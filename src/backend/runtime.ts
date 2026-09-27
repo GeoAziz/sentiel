@@ -20,10 +20,18 @@ export async function initializeBackendRuntime() {
       const db = await getDbClient();
       if (db) {
         await seedDatabase();
-        return { mode, databaseConfigured: true, initialized: true, mockOnly: true };
+        return {
+          mode,
+          databaseConfigured: true,
+          initialized: true,
+          mockOnly: true,
+        };
       }
     } catch (error) {
-      console.warn("Database initialization failed; falling back to in-memory backend.", error);
+      console.warn(
+        "Database initialization failed; falling back to in-memory backend.",
+        error,
+      );
     }
   }
 

@@ -28,13 +28,25 @@ function analyzeMock(
   decision: Decision,
 ): AISecurityAnalysis {
   const resource = request.resource.toLowerCase();
-  const isSecret = /\.env|\.ssh|secret|credential|id_rsa|aws|token/.test(resource);
-  const isDestructive = /rm\s+-rf|drop\s+(table|database)|--force|format/.test(resource);
+  const isSecret = /\.env|\.ssh|secret|credential|id_rsa|aws|token/.test(
+    resource,
+  );
+  const isDestructive = /rm\s+-rf|drop\s+(table|database)|--force|format/.test(
+    resource,
+  );
   const untrusted = request.context?.trust === "UNTRUSTED";
-  const risk = isDestructive ? "CRITICAL" : isSecret ? "HIGH" : decision === "REVIEW" ? "MEDIUM" : "LOW";
+  const risk = isDestructive
+    ? "CRITICAL"
+    : isSecret
+      ? "HIGH"
+      : decision === "REVIEW"
+        ? "MEDIUM"
+        : "LOW";
 
   return {
-    intent: isSecret ? "Access protected configuration or credentials" : "Request a simulated agent capability",
+    intent: isSecret
+      ? "Access protected configuration or credentials"
+      : "Request a simulated agent capability",
     threat: isDestructive
       ? "Destructive operation"
       : untrusted && isSecret
@@ -47,7 +59,8 @@ function analyzeMock(
     risk,
     confidence: 94,
     recommendation: decision,
-    reasoning: "Deterministic mock advisory. The policy engine alone determines the final decision.",
+    reasoning:
+      "Deterministic mock advisory. The policy engine alone determines the final decision.",
     mitreAtlasId: isSecret ? "AML.T0051" : undefined,
     engine: "sentinel-mock-advisory",
   };
@@ -77,8 +90,20 @@ export class MockSentinelRuntime {
       !Array.isArray(policies) ||
       agents.length > 100 ||
       policies.length > 100 ||
-      agents.some((agent) => !agent || typeof agent.id !== "string" || typeof agent.name !== "string" || typeof agent.policyId !== "string") ||
-      policies.some((policy) => !policy || typeof policy.id !== "string" || typeof policy.name !== "string" || !Array.isArray(policy.groups))
+      agents.some(
+        (agent) =>
+          !agent ||
+          typeof agent.id !== "string" ||
+          typeof agent.name !== "string" ||
+          typeof agent.policyId !== "string",
+      ) ||
+      policies.some(
+        (policy) =>
+          !policy ||
+          typeof policy.id !== "string" ||
+          typeof policy.name !== "string" ||
+          !Array.isArray(policy.groups),
+      )
     ) {
       throw new Error("Invalid mock configuration");
     }
@@ -103,18 +128,29 @@ export class MockSentinelRuntime {
       request.capability.length > 200 ||
       request.resource.length > 1000
     ) {
-      throw new Error("agent_id, capability, and resource are required strings within size limits");
+      throw new Error(
+        "agent_id, capability, and resource are required strings within size limits",
+      );
     }
 
-    const agent = this.agents.find((candidate) => candidate.id === request.agent_id);
+    const agent = this.agents.find(
+      (candidate) => candidate.id === request.agent_id,
+    );
     if (!agent) throw new Error("Unknown agent");
-    const agentUnavailable = agent.isolated || agent.status === "QUARANTINED" || agent.status === "SUSPENDED";
+    const agentUnavailable =
+      agent.isolated ||
+      agent.status === "QUARANTINED" ||
+      agent.status === "SUSPENDED";
 
-    const policy = this.policies.find((candidate) => candidate.id === agent.policyId);
+    const policy = this.policies.find(
+      (candidate) => candidate.id === agent.policyId,
+    );
     if (!policy) throw new Error("Agent policy is unavailable");
 
-    const trust: TrustLevel = request.context?.trust === "TRUSTED" ? "TRUSTED" : "UNTRUSTED";
-    const origin = request.context?.source?.trim() || "Unspecified mock request source";
+    const trust: TrustLevel =
+      request.context?.trust === "TRUSTED" ? "TRUSTED" : "UNTRUSTED";
+    const origin =
+      request.context?.source?.trim() || "Unspecified mock request source";
     const combinedResource = `${request.resource} ${request.action || ""} ${request.capability}`;
     const result = agentUnavailable
       ? {
@@ -122,12 +158,24 @@ export class MockSentinelRuntime {
           status: "PREVENTED" as const,
           policyId: policy.id,
           policyName: policy.name,
-          reason: "Agent is isolated or inactive under the current mock configuration.",
+          reason:
+            "Agent is isolated or inactive under the current mock configuration.",
           timeline: [
-            { label: `Agent requested ${request.capability}("${request.resource}")`, state: "done" as const },
+            {
+              label: `Agent requested ${request.capability}("${request.resource}")`,
+              state: "done" as const,
+            },
             { label: "Sentinel checked agent status", state: "done" as const },
-            { label: "Agent is quarantined or suspended -> BLOCK", state: "done" as const, tone: "block" as const },
-            { label: "Mock tool adapter not invoked", state: "done" as const, tone: "block" as const },
+            {
+              label: "Agent is quarantined or suspended -> BLOCK",
+              state: "done" as const,
+              tone: "block" as const,
+            },
+            {
+              label: "Mock tool adapter not invoked",
+              state: "done" as const,
+              tone: "block" as const,
+            },
           ],
         }
       : evaluateRequest(
@@ -145,11 +193,16 @@ export class MockSentinelRuntime {
       ts,
       agent: { id: agent.id, name: agent.name, model: agent.model },
       capability: request.capability,
-      action: request.action?.trim() || `${request.capability} ${request.resource}`,
+      action:
+        request.action?.trim() || `${request.capability} ${request.resource}`,
       resource: request.resource,
       decision: result.decision,
       status: result.status,
-      policy: { id: result.policyId, name: result.policyName, reason: result.reason },
+      policy: {
+        id: result.policyId,
+        name: result.policyName,
+        reason: result.reason,
+      },
       source: {
         origin,
         trust,
@@ -180,7 +233,8 @@ export class MockSentinelRuntime {
     if (original.decision !== "REVIEW" || original.status !== "PENDING") {
       throw new Error("Only pending REVIEW events can be resolved");
     }
-    if (this.findApproval(eventId)) throw new Error("Approval already resolved");
+    if (this.findApproval(eventId))
+      throw new Error("Approval already resolved");
 
     const resolvedAt = new Date().toISOString();
     const approval = { outcome, resolvedAt, operator: by, reason } as const;
@@ -200,12 +254,18 @@ export class MockSentinelRuntime {
       timeline: [
         ...original.timeline.filter((step) => step.state !== "active"),
         {
-          label: outcome === "APPROVED" ? "Operator approved mock execution" : "Operator denied mock execution",
+          label:
+            outcome === "APPROVED"
+              ? "Operator approved mock execution"
+              : "Operator denied mock execution",
           state: "done",
           tone: outcome === "APPROVED" ? "allow" : "block",
         },
         {
-          label: outcome === "APPROVED" ? "Mock tool adapter may proceed" : "Mock tool adapter remains blocked",
+          label:
+            outcome === "APPROVED"
+              ? "Mock tool adapter may proceed"
+              : "Mock tool adapter remains blocked",
           state: "done",
           tone: outcome === "APPROVED" ? "allow" : "block",
         },
@@ -215,7 +275,10 @@ export class MockSentinelRuntime {
     return clone(updated);
   }
 
-  getStatus(eventId: string): { status: "PENDING" | "RESOLVED"; outcome?: "APPROVED" | "DENIED" } {
+  getStatus(eventId: string): {
+    status: "PENDING" | "RESOLVED";
+    outcome?: "APPROVED" | "DENIED";
+  } {
     const original = this.findOriginal(eventId);
     if (!original) throw new Error("Unknown event");
     const approval = this.findApproval(eventId);
@@ -226,7 +289,10 @@ export class MockSentinelRuntime {
 
   listEvents(): SecurityEvent[] {
     return this.records
-      .filter((record): record is Extract<EventRecord, { kind: "DECISION" }> => record.kind === "DECISION")
+      .filter(
+        (record): record is Extract<EventRecord, { kind: "DECISION" }> =>
+          record.kind === "DECISION",
+      )
       .map(({ event }) => {
         const approval = this.findApproval(event.id);
         if (!approval) return clone(event);
@@ -258,7 +324,9 @@ export class MockSentinelRuntime {
     return record ? clone(record.event) : undefined;
   }
 
-  private findApproval(eventId: string): Extract<EventRecord, { kind: "APPROVAL" }> | undefined {
+  private findApproval(
+    eventId: string,
+  ): Extract<EventRecord, { kind: "APPROVAL" }> | undefined {
     return this.records.find(
       (item): item is Extract<EventRecord, { kind: "APPROVAL" }> =>
         item.kind === "APPROVAL" && item.eventId === eventId,
@@ -282,12 +350,18 @@ export class MockSentinelRuntime {
       timeline: [
         ...event.timeline.filter((step) => step.state !== "active"),
         {
-          label: record.outcome === "APPROVED" ? "Operator approved mock execution" : "Operator denied mock execution",
+          label:
+            record.outcome === "APPROVED"
+              ? "Operator approved mock execution"
+              : "Operator denied mock execution",
           state: "done",
           tone: record.outcome === "APPROVED" ? "allow" : "block",
         },
         {
-          label: record.outcome === "APPROVED" ? "Mock tool adapter may proceed" : "Mock tool adapter remains blocked",
+          label:
+            record.outcome === "APPROVED"
+              ? "Mock tool adapter may proceed"
+              : "Mock tool adapter remains blocked",
           state: "done",
           tone: record.outcome === "APPROVED" ? "allow" : "block",
         },

@@ -20,10 +20,12 @@ test("allows an in-policy mock source read", () => {
 
 test("blocks secret reads from untrusted context", () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(request({
-    resource: ".env",
-    context: { source: "untrusted repository content", trust: "UNTRUSTED" },
-  }));
+  const event = runtime.authorize(
+    request({
+      resource: ".env",
+      context: { source: "untrusted repository content", trust: "UNTRUSTED" },
+    }),
+  );
   assert.equal(event.decision, "BLOCK");
   assert.equal(event.status, "PREVENTED");
   assert.match(event.policy.reason, /untrusted|secret|inaccessible/i);
@@ -31,26 +33,40 @@ test("blocks secret reads from untrusted context", () => {
 
 test("holds production deployment for review and appends approval without changing decision record", () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(request({
-    agent_id: "agent_release_01",
-    capability: "deploy.production",
-    resource: "production",
-    action: "deploy production --tag=mock-v1",
-    context: { source: "mock release pipeline", trust: "TRUSTED" },
-  }));
+  const event = runtime.authorize(
+    request({
+      agent_id: "agent_release_01",
+      capability: "deploy.production",
+      resource: "production",
+      action: "deploy production --tag=mock-v1",
+      context: { source: "mock release pipeline", trust: "TRUSTED" },
+    }),
+  );
   assert.equal(event.decision, "REVIEW");
   assert.equal(runtime.getStatus(event.id).status, "PENDING");
 
-  const resolved = runtime.resolveApproval(event.id, "APPROVED", "demo operator", "Approved for demo");
+  const resolved = runtime.resolveApproval(
+    event.id,
+    "APPROVED",
+    "demo operator",
+    "Approved for demo",
+  );
   assert.equal(resolved.decision, "ALLOW");
   assert.equal(runtime.getStatus(event.id).outcome, "APPROVED");
   const records = runtime.listRecords();
   assert.equal(records.length, 2);
   assert.equal(records[0].kind, "DECISION");
-  if (records[0].kind === "DECISION") assert.equal(records[0].event.decision, "REVIEW");
+  if (records[0].kind === "DECISION")
+    assert.equal(records[0].event.decision, "REVIEW");
   assert.equal(records[1].kind, "APPROVAL");
   assert.throws(
-    () => runtime.resolveApproval(event.id, "DENIED", "another operator", "duplicate"),
+    () =>
+      runtime.resolveApproval(
+        event.id,
+        "DENIED",
+        "another operator",
+        "duplicate",
+      ),
     /already resolved/,
   );
 });
@@ -67,8 +83,14 @@ test("rejects approval for a blocked request", () => {
 
 test("rejects unknown agents and malformed authorization requests", () => {
   const runtime = new MockSentinelRuntime();
-  assert.throws(() => runtime.authorize(request({ agent_id: "missing" })), /Unknown agent/);
-  assert.throws(() => runtime.authorize(request({ resource: "" })), /required strings/);
+  assert.throws(
+    () => runtime.authorize(request({ agent_id: "missing" })),
+    /Unknown agent/,
+  );
+  assert.throws(
+    () => runtime.authorize(request({ resource: "" })),
+    /required strings/,
+  );
 });
 
 test("updated mock policy configuration controls later authorization decisions", () => {
@@ -87,9 +109,11 @@ test("requires trusted provenance when a matched policy rule says so", () => {
   const config = runtime.getConfig();
   config.policies[0].groups[0].rules[0].requireTrustedOrigin = true;
   runtime.updateConfig(config.agents, config.policies);
-  const event = runtime.authorize(request({
-    context: { source: "untrusted pull request", trust: "UNTRUSTED" },
-  }));
+  const event = runtime.authorize(
+    request({
+      context: { source: "untrusted pull request", trust: "UNTRUSTED" },
+    }),
+  );
   assert.equal(event.decision, "BLOCK");
 });
 

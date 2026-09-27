@@ -5,7 +5,9 @@ import { sql } from "drizzle-orm";
 import * as schema from "./schema";
 
 async function main() {
-  const connectionString = process.env.DATABASE_URL ?? "postgres://postgres:postgres@localhost:5432/sentinel";
+  const connectionString =
+    process.env.DATABASE_URL ??
+    "postgres://postgres:postgres@localhost:5432/sentinel";
 
   const client = new Client({ connectionString });
   await client.connect();

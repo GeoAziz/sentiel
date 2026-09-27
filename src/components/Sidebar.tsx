@@ -133,7 +133,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="mono text-[10px] text-[#626B76]">API-backed demo</span>
+          <span className="mono text-[10px] text-[#626B76]">
+            API-backed demo
+          </span>
         </div>
       </div>
 
@@ -205,9 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-3 border-t border-[#1E232A] bg-[#0A0C0E] space-y-2">
         <div className="flex items-center justify-between text-[11px] mono">
           <span className="text-[#626B76]">Simulated authorization</span>
-          <span className="text-[#F5A524] flex items-center gap-1">
-            MOCK
-          </span>
+          <span className="text-[#F5A524] flex items-center gap-1">MOCK</span>
         </div>
         <div className="text-[10px] text-[#3F464E] leading-relaxed">
           We don&apos;t need perfect AI. We prevent unlimited authority.

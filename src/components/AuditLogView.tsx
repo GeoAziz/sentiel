@@ -1,19 +1,32 @@
-import React, { useState } from 'react';
-import { SecurityEvent } from '../types/sentinel';
-import { FileCode, Download, Search, CheckCircle2, Hash, ShieldCheck, ChevronRight } from 'lucide-react';
-import { formatTime } from '../utils/engine';
+import React, { useState } from "react";
+import { SecurityEvent } from "../types/sentinel";
+import {
+  FileCode,
+  Download,
+  Search,
+  CheckCircle2,
+  Hash,
+  ShieldCheck,
+  ChevronRight,
+} from "lucide-react";
+import { formatTime } from "../utils/engine";
 
 interface AuditLogViewProps {
   events: SecurityEvent[];
   onSelectEvent: (id: string) => void;
 }
 
-export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEvent }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [decisionFilter, setDecisionFilter] = useState<'ALL' | 'ALLOW' | 'REVIEW' | 'BLOCK'>('ALL');
+export const AuditLogView: React.FC<AuditLogViewProps> = ({
+  events,
+  onSelectEvent,
+}) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [decisionFilter, setDecisionFilter] = useState<
+    "ALL" | "ALLOW" | "REVIEW" | "BLOCK"
+  >("ALL");
 
   const filteredEvents = events.filter((e) => {
-    if (decisionFilter !== 'ALL' && e.decision !== decisionFilter) return false;
+    if (decisionFilter !== "ALL" && e.decision !== decisionFilter) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -28,17 +41,32 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
   });
 
   const exportJSON = () => {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(events, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `sentinel-audit-trail-${new Date().toISOString()}.json`);
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(events, null, 2));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute(
+      "download",
+      `sentinel-audit-trail-${new Date().toISOString()}.json`,
+    );
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
   const exportCSV = () => {
-    const headers = ['EventID', 'Timestamp', 'Agent', 'Model', 'Capability', 'Resource', 'Decision', 'Trust', 'Hash'];
+    const headers = [
+      "EventID",
+      "Timestamp",
+      "Agent",
+      "Model",
+      "Capability",
+      "Resource",
+      "Decision",
+      "Trust",
+      "Hash",
+    ];
     const rows = events.map((e) => [
       e.id,
       e.ts,
@@ -51,10 +79,15 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
       e.hash,
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', encodeURI(csvContent));
-    downloadAnchor.setAttribute('download', `sentinel-audit-trail-${new Date().toISOString()}.csv`);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", encodeURI(csvContent));
+    downloadAnchor.setAttribute(
+      "download",
+      `sentinel-audit-trail-${new Date().toISOString()}.csv`,
+    );
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -69,7 +102,9 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
             Mock Decision Log
           </h1>
           <p className="text-xs text-[#9AA3AD] mt-1 max-w-2xl">
-            In-memory demo records from the mock API. Data is lost when the server restarts; hashes are illustrative and provide no tamper resistance or compliance evidence.
+            In-memory demo records from the mock API. Data is lost when the
+            server restarts; hashes are illustrative and provide no tamper
+            resistance or compliance evidence.
           </p>
         </div>
 
@@ -97,21 +132,31 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
           <CheckCircle2 className="w-4 h-4 text-[#2ED47A] shrink-0" />
           <div>
             <div className="text-[#E8EAED] font-semibold">Store: IN-MEMORY</div>
-            <div className="text-[10px] text-[#626B76]">Cleared on server restart</div>
+            <div className="text-[10px] text-[#626B76]">
+              Cleared on server restart
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-[#4A9EFF] shrink-0" />
           <div>
-            <div className="text-[#E8EAED] font-semibold">Approval flow: SIMULATED</div>
-            <div className="text-[10px] text-[#626B76]">Demo operator identity only</div>
+            <div className="text-[#E8EAED] font-semibold">
+              Approval flow: SIMULATED
+            </div>
+            <div className="text-[10px] text-[#626B76]">
+              Demo operator identity only
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Hash className="w-4 h-4 text-[#F5A524] shrink-0" />
           <div>
-            <div className="text-[#E8EAED] font-semibold">Compliance: NOT ASSESSED</div>
-            <div className="text-[10px] text-[#626B76]">Not production security evidence</div>
+            <div className="text-[#E8EAED] font-semibold">
+              Compliance: NOT ASSESSED
+            </div>
+            <div className="text-[10px] text-[#626B76]">
+              Not production security evidence
+            </div>
           </div>
         </div>
       </div>
@@ -119,14 +164,14 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
       {/* Filters & Search */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-[#0E1013] border border-[#1E232A] rounded-lg">
         <div className="flex items-center gap-1.5">
-          {(['ALL', 'ALLOW', 'REVIEW', 'BLOCK'] as const).map((dec) => (
+          {(["ALL", "ALLOW", "REVIEW", "BLOCK"] as const).map((dec) => (
             <button
               key={dec}
               onClick={() => setDecisionFilter(dec)}
               className={`px-2.5 py-1 rounded mono text-[11px] font-medium border transition-colors cursor-pointer ${
                 decisionFilter === dec
-                  ? 'bg-[#14171B] border-[#2A3038] text-[#E8EAED]'
-                  : 'text-[#626B76] border-transparent hover:text-[#9AA3AD]'
+                  ? "bg-[#14171B] border-[#2A3038] text-[#E8EAED]"
+                  : "text-[#626B76] border-transparent hover:text-[#9AA3AD]"
               }`}
             >
               {dec}
@@ -161,11 +206,11 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
           <tbody className="divide-y divide-[#1E232A]">
             {filteredEvents.map((evt) => {
               const toneCls =
-                evt.decision === 'ALLOW'
-                  ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                  : evt.decision === 'REVIEW'
-                  ? 'bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30'
-                  : 'bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30';
+                evt.decision === "ALLOW"
+                  ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                  : evt.decision === "REVIEW"
+                    ? "bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30"
+                    : "bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30";
 
               return (
                 <tr
@@ -175,21 +220,33 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
                 >
                   <td className="p-3 px-4 mono">
                     <div className="font-semibold text-[#E8EAED]">{evt.id}</div>
-                    <div className="text-[10px] text-[#626B76] mt-0.5">{formatTime(evt.ts)}</div>
+                    <div className="text-[10px] text-[#626B76] mt-0.5">
+                      {formatTime(evt.ts)}
+                    </div>
                   </td>
 
                   <td className="p-3 px-3 mono">
-                    <div className="text-[#9AA3AD] font-medium">{evt.agent.name}</div>
-                    <div className="text-[10px] text-[#626B76]">{evt.agent.model}</div>
+                    <div className="text-[#9AA3AD] font-medium">
+                      {evt.agent.name}
+                    </div>
+                    <div className="text-[10px] text-[#626B76]">
+                      {evt.agent.model}
+                    </div>
                   </td>
 
                   <td className="p-3 px-3 mono min-w-[200px]">
-                    <div className="text-[#E8EAED] font-semibold">{evt.capability}</div>
-                    <div className="text-[11px] text-[#626B76] truncate max-w-sm">{evt.resource}</div>
+                    <div className="text-[#E8EAED] font-semibold">
+                      {evt.capability}
+                    </div>
+                    <div className="text-[11px] text-[#626B76] truncate max-w-sm">
+                      {evt.resource}
+                    </div>
                   </td>
 
                   <td className="p-3 px-3">
-                    <span className={`mono text-[10px] px-2 py-0.5 rounded font-bold border ${toneCls}`}>
+                    <span
+                      className={`mono text-[10px] px-2 py-0.5 rounded font-bold border ${toneCls}`}
+                    >
                       {evt.decision}
                     </span>
                   </td>

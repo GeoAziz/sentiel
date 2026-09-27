@@ -11,11 +11,14 @@ async function withApi(run: (baseUrl: string) => Promise<void>) {
   const server = app.listen(0);
   await new Promise<void>((resolve) => server.once("listening", resolve));
   const address = server.address();
-  if (!address || typeof address === "string") throw new Error("API server did not bind");
+  if (!address || typeof address === "string")
+    throw new Error("API server did not bind");
   try {
     await run(`http://127.0.0.1:${address.port}`);
   } finally {
-    await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
   }
 }
 
@@ -31,13 +34,19 @@ test("authorization route records and publishes a deterministic mock decision", 
         context: { source: "untrusted repository", trust: "UNTRUSTED" },
       }),
     });
-    const payload = await response.json() as { decision: string; event_id: string; mockOnly: boolean };
+    const payload = (await response.json()) as {
+      decision: string;
+      event_id: string;
+      mockOnly: boolean;
+    };
     assert.equal(response.status, 201);
     assert.equal(payload.decision, "BLOCK");
     assert.equal(payload.mockOnly, true);
 
     const eventResponse = await fetch(`${baseUrl}/events`);
-    const eventPayload = await eventResponse.json() as { events: Array<{ id: string }> };
+    const eventPayload = (await eventResponse.json()) as {
+      events: Array<{ id: string }>;
+    };
     assert.equal(eventPayload.events[0].id, payload.event_id);
   });
 });
@@ -55,18 +64,30 @@ test("approval endpoint resolves REVIEW and status is visible to polling clients
         context: { source: "mock release pipeline", trust: "TRUSTED" },
       }),
     });
-    const createdPayload = await created.json() as { decision: string; event_id: string };
+    const createdPayload = (await created.json()) as {
+      decision: string;
+      event_id: string;
+    };
     assert.equal(createdPayload.decision, "REVIEW");
 
-    const approval = await fetch(`${baseUrl}/events/${createdPayload.event_id}/approve`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ outcome: "APPROVED", by: "test operator" }),
-    });
+    const approval = await fetch(
+      `${baseUrl}/events/${createdPayload.event_id}/approve`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ outcome: "APPROVED", by: "test operator" }),
+      },
+    );
     assert.equal(approval.status, 200);
 
-    const status = await fetch(`${baseUrl}/events/${createdPayload.event_id}/status`);
-    assert.deepEqual(await status.json(), { status: "RESOLVED", outcome: "APPROVED", mockOnly: true });
+    const status = await fetch(
+      `${baseUrl}/events/${createdPayload.event_id}/status`,
+    );
+    assert.deepEqual(await status.json(), {
+      status: "RESOLVED",
+      outcome: "APPROVED",
+      mockOnly: true,
+    });
   });
 });
 

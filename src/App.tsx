@@ -79,10 +79,11 @@ export default function App() {
         setConfigLoaded(true);
       })
       .catch((error: unknown) => {
-        setRuntimeError(error instanceof Error ? error.message : "Mock API unavailable");
+        setRuntimeError(
+          error instanceof Error ? error.message : "Mock API unavailable",
+        );
         setConfigLoaded(true);
       });
-
   }, []);
 
   // Subscribe to real-time events via Server-Sent Events (SSE)
@@ -144,12 +145,19 @@ export default function App() {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ agents, policies }),
-    }).then((response) => {
-      if (!response.ok) throw new Error(`Configuration update failed (${response.status})`);
-      setRuntimeError(null);
-    }).catch((error: unknown) => {
-      setRuntimeError(error instanceof Error ? error.message : "Mock configuration update failed");
-    });
+    })
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`Configuration update failed (${response.status})`);
+        setRuntimeError(null);
+      })
+      .catch((error: unknown) => {
+        setRuntimeError(
+          error instanceof Error
+            ? error.message
+            : "Mock configuration update failed",
+        );
+      });
   }, [agents, policies, configLoaded]);
 
   // Route navigation helper
@@ -184,13 +192,17 @@ export default function App() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.event) {
-        throw new Error(payload.error || `Authorization failed (${response.status})`);
+        throw new Error(
+          payload.error || `Authorization failed (${response.status})`,
+        );
       }
 
       const event = payload.event as SecurityEvent;
       setRuntimeError(null);
       setEvents((previous) => {
-        const existingIndex = previous.findIndex((item) => item.id === event.id);
+        const existingIndex = previous.findIndex(
+          (item) => item.id === event.id,
+        );
         if (existingIndex >= 0) {
           const updated = [...previous];
           updated[existingIndex] = event;
@@ -201,7 +213,9 @@ export default function App() {
       if (event.decision === "BLOCK") setTakeoverEvent(event);
       return event;
     } catch (error) {
-      setRuntimeError(error instanceof Error ? error.message : "Mock API unavailable");
+      setRuntimeError(
+        error instanceof Error ? error.message : "Mock API unavailable",
+      );
       throw error;
     }
   };
@@ -471,7 +485,8 @@ export default function App() {
                 tone: "block",
               },
               {
-                label: "Mock action blocked; no real file or tool was accessed.",
+                label:
+                  "Mock action blocked; no real file or tool was accessed.",
                 state: "done",
                 tone: "allow",
               },
@@ -586,24 +601,35 @@ export default function App() {
     reason?: string,
   ) => {
     try {
-      const response = await fetch(`/events/${encodeURIComponent(id)}/approve`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          outcome,
-          by: "Demo operator",
-          reason: reason || `Operator ${outcome.toLowerCase()} the mock request.`,
-        }),
-      });
+      const response = await fetch(
+        `/events/${encodeURIComponent(id)}/approve`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            outcome,
+            by: "Demo operator",
+            reason:
+              reason || `Operator ${outcome.toLowerCase()} the mock request.`,
+          }),
+        },
+      );
       const payload = await response.json();
       if (!response.ok || !payload.event) {
-        throw new Error(payload.error || `Approval failed (${response.status})`);
+        throw new Error(
+          payload.error || `Approval failed (${response.status})`,
+        );
       }
       const event = payload.event as SecurityEvent;
-      setEvents((previous) => [event, ...previous.filter((item) => item.id !== id)]);
+      setEvents((previous) => [
+        event,
+        ...previous.filter((item) => item.id !== id),
+      ]);
       setRuntimeError(null);
     } catch (error) {
-      setRuntimeError(error instanceof Error ? error.message : "Mock approval failed");
+      setRuntimeError(
+        error instanceof Error ? error.message : "Mock approval failed",
+      );
     }
   };
 
@@ -654,7 +680,9 @@ export default function App() {
       setEvents([]);
       setRuntimeError(null);
     } catch (error) {
-      setRuntimeError(error instanceof Error ? error.message : "Mock reset failed");
+      setRuntimeError(
+        error instanceof Error ? error.message : "Mock reset failed",
+      );
     }
   };
 
@@ -749,7 +777,10 @@ export default function App() {
         {/* View Router */}
         <main className="flex-1 overflow-y-auto p-6">
           {runtimeError && (
-            <div role="alert" className="mb-4 border border-[#FF4D4F]/40 bg-[#FF4D4F]/10 px-3 py-2 text-xs text-[#FF8A8C]">
+            <div
+              role="alert"
+              className="mb-4 border border-[#FF4D4F]/40 bg-[#FF4D4F]/10 px-3 py-2 text-xs text-[#FF8A8C]"
+            >
               Mock API request failed: {runtimeError}
             </div>
           )}

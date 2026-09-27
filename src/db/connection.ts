@@ -27,7 +27,10 @@ export async function getDbClient(): Promise<DbClient> {
     cachedClient = drizzle(pool, { schema });
     return cachedClient;
   } catch (error) {
-    console.warn("PostgreSQL not available, falling back to in-memory runtime.", error);
+    console.warn(
+      "PostgreSQL not available, falling back to in-memory runtime.",
+      error,
+    );
     cachedClient = null;
     return cachedClient;
   }

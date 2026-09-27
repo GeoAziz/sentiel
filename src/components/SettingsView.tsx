@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
-import { Settings, Shield, Bell, Key, RefreshCw, CheckCircle, Database } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Settings,
+  Shield,
+  Bell,
+  Key,
+  RefreshCw,
+  CheckCircle,
+  Database,
+} from "lucide-react";
 
 interface SettingsViewProps {
   onResetDemoData: () => void;
 }
 
-export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) => {
+export const SettingsView: React.FC<SettingsViewProps> = ({
+  onResetDemoData,
+}) => {
   const [strictMode, setStrictMode] = useState(true);
   const [autoQuarantine, setAutoQuarantine] = useState(true);
   const [mockAdvisory, setMockAdvisory] = useState(true);
   const [multiFactorGating, setMultiFactorGating] = useState(true);
-  const [webhookUrl, setWebhookUrl] = useState('https://hooks.slack.com/services/T00/B00/sentinel-alerts');
+  const [webhookUrl, setWebhookUrl] = useState(
+    "https://hooks.slack.com/services/T00/B00/sentinel-alerts",
+  );
   const [savedNotification, setSavedNotification] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
@@ -27,7 +39,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
           Mock Runtime Settings
         </h1>
         <p className="text-xs text-[#9AA3AD] mt-1">
-          Preview-only controls for the demo. Agent and policy changes are managed by the mock API; these settings do not change real systems or send webhooks.
+          Preview-only controls for the demo. Agent and policy changes are
+          managed by the mock API; these settings do not change real systems or
+          send webhooks.
         </p>
       </div>
 
@@ -42,9 +56,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Default-Deny Preview</div>
+                <div className="font-semibold text-[#E8EAED]">
+                  Default-Deny Preview
+                </div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Display-only toggle. The mock API always evaluates its active agent policy.
+                  Display-only toggle. The mock API always evaluates its active
+                  agent policy.
                 </div>
               </div>
               <button
@@ -52,19 +69,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
                 onClick={() => setStrictMode(!strictMode)}
                 className={`mono text-[10px] px-3 py-1 rounded font-bold border transition-colors cursor-pointer ${
                   strictMode
-                    ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                    : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
+                    ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                    : "bg-[#14171B] text-[#626B76] border-[#2A3038]"
                 }`}
               >
-                {strictMode ? 'PREVIEW ON' : 'PREVIEW OFF'}
+                {strictMode ? "PREVIEW ON" : "PREVIEW OFF"}
               </button>
             </div>
 
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Provenance Quarantine Preview</div>
+                <div className="font-semibold text-[#E8EAED]">
+                  Provenance Quarantine Preview
+                </div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Display-only toggle; request provenance is evaluated by the mock policy API.
+                  Display-only toggle; request provenance is evaluated by the
+                  mock policy API.
                 </div>
               </div>
               <button
@@ -72,19 +92,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
                 onClick={() => setAutoQuarantine(!autoQuarantine)}
                 className={`mono text-[10px] px-3 py-1 rounded font-bold border transition-colors cursor-pointer ${
                   autoQuarantine
-                    ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                    : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
+                    ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                    : "bg-[#14171B] text-[#626B76] border-[#2A3038]"
                 }`}
               >
-                {autoQuarantine ? 'ACTIVE' : 'OFF'}
+                {autoQuarantine ? "ACTIVE" : "OFF"}
               </button>
             </div>
 
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Deterministic Mock Advisory</div>
+                <div className="font-semibold text-[#E8EAED]">
+                  Deterministic Mock Advisory
+                </div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Local heuristic text only. No external model is called, and this advisory never decides authorization.
+                  Local heuristic text only. No external model is called, and
+                  this advisory never decides authorization.
                 </div>
               </div>
               <button
@@ -92,19 +115,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
                 onClick={() => setMockAdvisory(!mockAdvisory)}
                 className={`mono text-[10px] px-3 py-1 rounded font-bold border transition-colors cursor-pointer ${
                   mockAdvisory
-                    ? 'bg-[#4A9EFF]/15 text-[#4A9EFF] border-[#4A9EFF]/30'
-                    : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
+                    ? "bg-[#4A9EFF]/15 text-[#4A9EFF] border-[#4A9EFF]/30"
+                    : "bg-[#14171B] text-[#626B76] border-[#2A3038]"
                 }`}
               >
-                {mockAdvisory ? 'PREVIEW ON' : 'PREVIEW OFF'}
+                {mockAdvisory ? "PREVIEW ON" : "PREVIEW OFF"}
               </button>
             </div>
 
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Dual-Key Human-in-the-Loop Gating</div>
+                <div className="font-semibold text-[#E8EAED]">
+                  Dual-Key Human-in-the-Loop Gating
+                </div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  The approval endpoint records a demo operator decision; no cryptographic identity check is performed.
+                  The approval endpoint records a demo operator decision; no
+                  cryptographic identity check is performed.
                 </div>
               </div>
               <button
@@ -112,11 +138,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
                 onClick={() => setMultiFactorGating(!multiFactorGating)}
                 className={`mono text-[10px] px-3 py-1 rounded font-bold border transition-colors cursor-pointer ${
                   multiFactorGating
-                    ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                    : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
+                    ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                    : "bg-[#14171B] text-[#626B76] border-[#2A3038]"
                 }`}
               >
-                {multiFactorGating ? 'MANDATORY' : 'OPTIONAL'}
+                {multiFactorGating ? "MANDATORY" : "OPTIONAL"}
               </button>
             </div>
           </div>

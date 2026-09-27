@@ -1,6 +1,12 @@
 import { INITIAL_AGENTS, INITIAL_POLICIES } from "../data/initialData";
 import { getDbClient } from "./connection";
-import { agents, agentCapabilities, policyVersions, policyRules, workspaces } from "./schema";
+import {
+  agents,
+  agentCapabilities,
+  policyVersions,
+  policyRules,
+  workspaces,
+} from "./schema";
 
 export async function seedDatabase() {
   const db = await getDbClient();
@@ -16,7 +22,9 @@ export async function seedDatabase() {
     .onConflictDoNothing()
     .returning();
 
-  const defaultWorkspace = workspace ?? { id: "00000000-0000-0000-0000-000000000001" };
+  const defaultWorkspace = workspace ?? {
+    id: "00000000-0000-0000-0000-000000000001",
+  };
 
   for (const agent of INITIAL_AGENTS) {
     await db
@@ -70,16 +78,19 @@ export async function seedDatabase() {
 
     for (const group of policy.groups) {
       for (const rule of group.rules) {
-        await db.insert(policyRules).values({
-          id: rule.id,
-          policyVersionId,
-          groupName: group.name,
-          resourcePattern: rule.res,
-          decision: rule.dec,
-          requireTrustedOrigin: Boolean(rule.requireTrustedOrigin),
-          explanation: rule.explanation ?? null,
-          enabled: rule.enabled,
-        }).onConflictDoNothing();
+        await db
+          .insert(policyRules)
+          .values({
+            id: rule.id,
+            policyVersionId,
+            groupName: group.name,
+            resourcePattern: rule.res,
+            decision: rule.dec,
+            requireTrustedOrigin: Boolean(rule.requireTrustedOrigin),
+            explanation: rule.explanation ?? null,
+            enabled: rule.enabled,
+          })
+          .onConflictDoNothing();
       }
     }
   }

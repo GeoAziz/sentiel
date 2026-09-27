@@ -5,11 +5,17 @@ import type { AuthorizationRequest } from "../types/sentinel";
 
 function sendRuntimeError(res: Response, error: unknown): void {
   const message = error instanceof Error ? error.message : "Mock runtime error";
-  const status = message.startsWith("Unknown ") ? 404 : message.startsWith("Only pending") ? 409 : 400;
+  const status = message.startsWith("Unknown ")
+    ? 404
+    : message.startsWith("Only pending")
+      ? 409
+      : 400;
   res.status(status).json({ error: message, mockOnly: true });
 }
 
-export function createMockApiRouter(runtime = new MockSentinelRuntime()): Router {
+export function createMockApiRouter(
+  runtime = new MockSentinelRuntime(),
+): Router {
   const router = Router();
 
   router.get("/api/health", (_req, res) => {
@@ -65,9 +71,12 @@ export function createMockApiRouter(runtime = new MockSentinelRuntime()): Router
       "X-Accel-Buffering": "no",
     });
     res.flushHeaders();
-    res.write(`data: ${JSON.stringify({ type: "CONNECTED", mockOnly: true })}\n\n`);
+    res.write(
+      `data: ${JSON.stringify({ type: "CONNECTED", mockOnly: true })}\n\n`,
+    );
 
-    const send = (event: unknown) => res.write(`data: ${JSON.stringify(event)}\n\n`);
+    const send = (event: unknown) =>
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
     runtime.listEvents().reverse().forEach(send);
     const unsubscribe = runtime.subscribe(send);
     const heartbeat = setInterval(() => res.write(": keep-alive\n\n"), 15000);
@@ -85,9 +94,15 @@ export function createMockApiRouter(runtime = new MockSentinelRuntime()): Router
       typeof by !== "string" ||
       !by.trim() ||
       by.length > 200 ||
-      (reason !== undefined && (typeof reason !== "string" || reason.length > 1000))
+      (reason !== undefined &&
+        (typeof reason !== "string" || reason.length > 1000))
     ) {
-      res.status(400).json({ error: "outcome and by are required; reason must be text", mockOnly: true });
+      res
+        .status(400)
+        .json({
+          error: "outcome and by are required; reason must be text",
+          mockOnly: true,
+        });
       return;
     }
 

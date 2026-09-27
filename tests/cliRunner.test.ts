@@ -12,20 +12,30 @@ async function withApi(run: (baseUrl: string) => Promise<void>) {
   const server = app.listen(0);
   await new Promise<void>((resolve) => server.once("listening", resolve));
   const address = server.address();
-  if (!address || typeof address === "string") throw new Error("API server did not bind");
+  if (!address || typeof address === "string")
+    throw new Error("API server did not bind");
   try {
     await run(`http://127.0.0.1:${address.port}`);
   } finally {
-    await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
   }
 }
 
 const adapterRequest = (resource: string, agentId = "agent_coding_01") => ({
   agent_id: agentId,
-  capability: agentId === "agent_release_01" ? "deploy.production" : "filesystem.read",
+  capability:
+    agentId === "agent_release_01" ? "deploy.production" : "filesystem.read",
   resource,
-  action: agentId === "agent_release_01" ? "deploy production --tag=mock" : `read ${resource}`,
-  context: { source: "mock CLI demo", trust: resource === ".env" ? "UNTRUSTED" as const : "TRUSTED" as const },
+  action:
+    agentId === "agent_release_01"
+      ? "deploy production --tag=mock"
+      : `read ${resource}`,
+  context: {
+    source: "mock CLI demo",
+    trust: resource === ".env" ? ("UNTRUSTED" as const) : ("TRUSTED" as const),
+  },
 });
 
 test("CLI never invokes its adapter for BLOCK", async () => {
@@ -34,7 +44,9 @@ test("CLI never invokes its adapter for BLOCK", async () => {
     const event = await runMockCliAction({
       apiBaseUrl,
       request: adapterRequest(".env"),
-      mockToolAdapter: () => { calls += 1; },
+      mockToolAdapter: () => {
+        calls += 1;
+      },
     });
     assert.equal(event.decision, "BLOCK");
     assert.equal(calls, 0);
@@ -56,7 +68,9 @@ test("CLI waits for human approval before invoking its adapter", async () => {
           body: JSON.stringify({ outcome: "APPROVED", by: "test operator" }),
         });
       },
-      mockToolAdapter: () => { calls += 1; },
+      mockToolAdapter: () => {
+        calls += 1;
+      },
     });
     const event = await action;
     assert.equal(event.decision, "ALLOW");

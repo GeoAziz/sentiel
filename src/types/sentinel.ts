@@ -1,8 +1,8 @@
-export type Decision = 'ALLOW' | 'REVIEW' | 'BLOCK';
-export type EventStatus = 'RESOLVED' | 'PREVENTED' | 'PENDING' | 'OVERRIDDEN';
-export type TrustLevel = 'TRUSTED' | 'UNTRUSTED';
-export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-export type AgentStatus = 'ACTIVE' | 'IDLE' | 'SUSPENDED' | 'QUARANTINED';
+export type Decision = "ALLOW" | "REVIEW" | "BLOCK";
+export type EventStatus = "RESOLVED" | "PREVENTED" | "PENDING" | "OVERRIDDEN";
+export type TrustLevel = "TRUSTED" | "UNTRUSTED";
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type AgentStatus = "ACTIVE" | "IDLE" | "SUSPENDED" | "QUARANTINED";
 
 export interface AuthorizationRequest {
   agent_id: string;
@@ -18,7 +18,7 @@ export interface AuthorizationRequest {
 
 export interface AgentCapability {
   label: string;
-  state: 'yes' | 'no' | 'warn';
+  state: "yes" | "no" | "warn";
   toolName?: string;
 }
 
@@ -26,9 +26,9 @@ export interface Agent {
   id: string;
   name: string;
   model: string;
-  environment: 'Development' | 'Staging' | 'Production';
+  environment: "Development" | "Staging" | "Production";
   status: AgentStatus;
-  risk: 'Controlled' | 'Elevated' | 'Critical';
+  risk: "Controlled" | "Elevated" | "Critical";
   policyId: string;
   policyName: string;
   capabilities: AgentCapability[];
@@ -64,8 +64,8 @@ export interface Policy {
 
 export interface TimelineStep {
   label: string;
-  state: 'done' | 'active' | 'pending';
-  tone?: 'allow' | 'review' | 'block' | 'neutral';
+  state: "done" | "active" | "pending";
+  tone?: "allow" | "review" | "block" | "neutral";
   timestamp?: string;
 }
 
@@ -107,7 +107,7 @@ export interface SecurityEvent {
   dataExposed: number;
   analysis?: AISecurityAnalysis;
   approval?: {
-    outcome: 'APPROVED' | 'DENIED';
+    outcome: "APPROVED" | "DENIED";
     resolvedAt: string;
     operator: string;
     reason?: string;
@@ -117,9 +117,16 @@ export interface SecurityEvent {
 
 export interface ToolItem {
   name: string;
-  category: 'Filesystem' | 'Shell' | 'Git' | 'Deployment' | 'Database' | 'Network' | 'Secrets';
+  category:
+    | "Filesystem"
+    | "Shell"
+    | "Git"
+    | "Deployment"
+    | "Database"
+    | "Network"
+    | "Secrets";
   description: string;
-  riskWeight: 'Low' | 'Medium' | 'High' | 'Critical';
+  riskWeight: "Low" | "Medium" | "High" | "Critical";
   defaultDecisions: Record<string, Decision>;
 }
 

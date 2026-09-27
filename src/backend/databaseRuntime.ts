@@ -88,13 +88,16 @@ export class DatabaseRuntime extends MockSentinelRuntime {
     const db = await getDbClient();
     if (!db) return;
 
-    await db.insert(approvals).values({
-      eventId,
-      outcome,
-      operator: by,
-      reason,
-      resolvedAt: new Date(resolvedAt),
-    }).onConflictDoNothing();
+    await db
+      .insert(approvals)
+      .values({
+        eventId,
+        outcome,
+        operator: by,
+        reason,
+        resolvedAt: new Date(resolvedAt),
+      })
+      .onConflictDoNothing();
   }
 
   private async clearPersistedState(): Promise<void> {

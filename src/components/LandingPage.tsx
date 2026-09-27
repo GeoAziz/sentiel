@@ -165,8 +165,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </h1>
 
             <p className="text-[#9AA3C2] text-sm sm:text-base leading-relaxed max-w-xl">
-              Explore a local mock of Sentinel&apos;s authorization flow. The API
-              evaluates simulated requests, streams decisions, and gates a
+              Explore a local mock of Sentinel&apos;s authorization flow. The
+              API evaluates simulated requests, streams decisions, and gates a
               canned adapter; it does not spawn an agent or access files,
               secrets, shells, or external AI services.
             </p>
@@ -207,7 +207,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             <div className="pt-2 flex items-center gap-6 text-xs mono text-[#626B76]">
               <span className="flex items-center gap-1.5 text-[#2ED47A]">
-                <CheckCircle2 className="w-4 h-4" /> No real tools or files accessed
+                <CheckCircle2 className="w-4 h-4" /> No real tools or files
+                accessed
               </span>
               <span className="flex items-center gap-1.5 text-[#4A9EFF]">
                 <Sparkles className="w-4 h-4" /> Deterministic mock advisory
@@ -761,8 +762,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   In-Memory Decisions &amp; Approval History
                 </h3>
                 <p className="text-xs text-[#9AA3C2] leading-relaxed">
-                  Demo event records and approval transitions live in memory
-                  and reset with the server. No cryptographic integrity or
+                  Demo event records and approval transitions live in memory and
+                  reset with the server. No cryptographic integrity or
                   compliance guarantee is provided.
                 </p>
               </div>
