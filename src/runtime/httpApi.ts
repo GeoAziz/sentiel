@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import { MockSentinelRuntime } from "./mockSentinel";
+import { isGeminiConfigured } from "./geminiAdvisor";
 import type { AuthorizationRequest } from "../types/sentinel";
 
 function sendRuntimeError(res: Response, error: unknown): void {
@@ -24,7 +25,7 @@ export function createMockApiRouter(
       version: "0.5.0-mock",
       mockOnly: true,
       enforcementActive: false,
-      geminiAttached: false,
+      geminiAttached: isGeminiConfigured(),
       timestamp: new Date().toISOString(),
     });
   });
@@ -42,9 +43,9 @@ export function createMockApiRouter(
     }
   });
 
-  router.post("/authorize", (req: Request, res: Response) => {
+  router.post("/authorize", async (req: Request, res: Response) => {
     try {
-      const event = runtime.authorize(req.body as AuthorizationRequest);
+      const event = await runtime.authorize(req.body as AuthorizationRequest);
       res.status(201).json({
         decision: event.decision,
         policy: event.policy,

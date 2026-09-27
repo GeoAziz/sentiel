@@ -1,8 +1,9 @@
+import "dotenv/config";
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createMockApiRouter } from "./src/runtime/httpApi";
-import { initializeBackendRuntime } from "./src/backend/runtime";
+import { initializeBackendRuntime, createRuntime } from "./src/backend/runtime";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -12,7 +13,7 @@ app.use(express.json({ limit: "32kb" }));
 
 async function startServer() {
   const backendState = await initializeBackendRuntime();
-  app.use(createMockApiRouter());
+  app.use(createMockApiRouter(createRuntime()));
 
   app.get("/api/backend-status", (_req, res) => {
     res.json({

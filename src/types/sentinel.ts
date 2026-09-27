@@ -69,6 +69,11 @@ export interface TimelineStep {
   timestamp?: string;
 }
 
+export interface EvaluationResultLike {
+  decision: Decision;
+  reason: string;
+}
+
 export interface AISecurityAnalysis {
   intent: string;
   threat: string;

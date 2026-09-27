@@ -5,8 +5,10 @@ import { getDbClient } from "../db/connection";
 import type { SecurityEvent } from "../types/sentinel";
 
 export class DatabaseRuntime extends MockSentinelRuntime {
-  override authorize(request: Parameters<MockSentinelRuntime["authorize"]>[0]) {
-    const event = super.authorize(request);
+  override async authorize(
+    request: Parameters<MockSentinelRuntime["authorize"]>[0],
+  ) {
+    const event = await super.authorize(request);
     void this.persistEvent(event);
     return event;
   }

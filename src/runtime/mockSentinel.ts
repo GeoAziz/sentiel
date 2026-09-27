@@ -1,5 +1,6 @@
 import { INITIAL_AGENTS, INITIAL_POLICIES } from "../data/initialData";
 import { evaluateRequest, generateHash } from "../utils/engine";
+import { analyzeWithGemini, isGeminiConfigured } from "./geminiAdvisor";
 import type {
   Agent,
   AISecurityAnalysis,
@@ -115,7 +116,7 @@ export class MockSentinelRuntime {
     this.policies = clone(policies as Policy[]);
   }
 
-  authorize(request: AuthorizationRequest): SecurityEvent {
+  async authorize(request: AuthorizationRequest): Promise<SecurityEvent> {
     if (
       !request ||
       typeof request.agent_id !== "string" ||
@@ -188,6 +189,16 @@ export class MockSentinelRuntime {
         );
     const id = `evt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
     const ts = new Date().toISOString();
+
+    // Gemini is only consulted for ambiguous cases (no matched policy rule, or a
+    // pending human REVIEW). It never decides ALLOW/BLOCK/REVIEW itself -- the
+    // deterministic result computed above is already final and unaffected by it.
+    const analysis =
+      result.ambiguous && isGeminiConfigured()
+        ? (await analyzeWithGemini(request, result)) ??
+          analyzeMock(request, result.decision)
+        : analyzeMock(request, result.decision);
+
     const event: SecurityEvent = {
       id,
       ts,
@@ -210,7 +221,7 @@ export class MockSentinelRuntime {
       },
       timeline: result.timeline,
       dataExposed: 0,
-      analysis: analyzeMock(request, result.decision),
+      analysis,
       hash: generateHash("mock", id, ts),
     };
 

@@ -46,6 +46,10 @@ export interface EvaluationResult {
     state: "done" | "active" | "pending";
     tone?: "allow" | "review" | "block";
   }[];
+  /** True when no explicit policy rule matched (default-deny) or a human REVIEW
+   * is pending -- the deterministic engine has lower confidence in these cases,
+   * which is when Gemini's contextual advisory is consulted. */
+  ambiguous?: boolean;
 }
 
 export function evaluateRequest(
@@ -206,6 +210,7 @@ export function evaluateRequest(
         reason:
           matchedRule.explanation ||
           `High-impact action (${matchedRule.res}) requires human supervisor review.`,
+        ambiguous: true,
         timeline: [
           {
             label: `Agent requested ${capability}("${resource}")`,
@@ -262,6 +267,7 @@ export function evaluateRequest(
     policyId: policy.id,
     policyName: policy.name,
     reason: `Default Deny: Resource or capability "${capability} / ${resource}" is not permitted under ${policy.name}.`,
+    ambiguous: true,
     timeline: [
       { label: `Agent requested ${capability}("${resource}")`, state: "done" },
       { label: "Sentinel checked declared tool matrix", state: "done" },

@@ -1,0 +1,293 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e10] [cursor=pointer]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: SENTINEL
+        - generic [ref=e13]: MOCK DEMO
+      - generic [ref=e14]: Simulated authorization control plane
+    - navigation [ref=e15]:
+      - link "Architecture" [ref=e16] [cursor=pointer]:
+        - /url: "#architecture"
+      - link "Enforcement Engine" [ref=e17] [cursor=pointer]:
+        - /url: "#platforms"
+      - link "LLM Integrations" [ref=e18] [cursor=pointer]:
+        - /url: "#integrations"
+      - link "Threat Research" [ref=e19] [cursor=pointer]:
+        - /url: "#research"
+      - link "Contact" [ref=e20] [cursor=pointer]:
+        - /url: "#contact"
+    - generic [ref=e21]:
+      - button "Live Sandbox" [ref=e22]
+      - button "Launch Security Console" [ref=e23] [cursor=pointer]
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]: MOCK AUTHORIZATION FLOW · NO REAL TOOLS
+      - heading "Reasoning is not authorization." [level=1] [ref=e35]
+      - paragraph [ref=e36]: Explore a local mock of Sentinel's authorization flow. The API evaluates simulated requests, streams decisions, and gates a canned adapter; it does not spawn an agent or access files, secrets, shells, or external AI services.
+      - generic [ref=e37]:
+        - generic [ref=e38]: CORE SECURITY PHILOSOPHY
+        - paragraph [ref=e43]: “We're not trying to make AI agents perfect. We're making sure an imperfect AI agent doesn't have unlimited authority.”
+        - paragraph [ref=e44]: Assume the AI can make a bad decision. Make sure the bad decision cannot exceed its boundary.
+      - generic [ref=e45]:
+        - button "RUN MOCK DEFENSE SCENARIO" [ref=e46] [cursor=pointer]
+        - button "OPEN DASHBOARD" [ref=e50] [cursor=pointer]
+      - generic [ref=e54]:
+        - generic [ref=e55]: No real tools or files accessed
+        - generic [ref=e59]: Deterministic mock advisory
+    - generic [ref=e64]:
+      - generic [ref=e73]:
+        - generic [ref=e77]:
+          - generic [ref=e78]: SENTINEL FIREWALL
+          - generic [ref=e79]: RUNTIME AUTHORIZER
+        - generic [ref=e80]:
+          - generic [ref=e81]: Active Intercept
+          - generic [ref=e82]: read_file(".env")
+          - generic [ref=e83]: ✕ BLOCKED (0B LEAKED)
+        - generic [ref=e84]: GATEWAY ONLINE
+      - generic [ref=e86]:
+        - generic [ref=e87]: TRY AGENT TOOL CALL
+        - generic [ref=e92]:
+          - button "1. read_file(\".env\")" [ref=e93]
+          - button "2. run npm test" [ref=e94]
+          - button "3. deploy production" [ref=e95]
+      - generic [ref=e96]:
+        - generic [ref=e97]: MOCK THREAT ADVISORY
+        - generic [ref=e102]:
+          - generic [ref=e103]: "Threat: Prompt Injection"
+          - generic [ref=e104]: Untrusted lineage probe targeting secret credentials.
+          - generic [ref=e105]: "MITRE: AML.T0051"
+  - generic [ref=e107]:
+    - generic [ref=e108]: TRUSTED BY ENTERPRISES DEPLOYING AUTONOMOUS AI AGENTS
+    - generic [ref=e109]:
+      - generic [ref=e110]: Enterprise Financial Cloud
+      - generic [ref=e111]: Global Space Agency
+      - generic [ref=e112]: Defense Systems Corp
+      - generic [ref=e113]: Autonomous Robotics Lab
+      - generic [ref=e114]: National Cyber Directorate
+      - generic [ref=e115]: Sovereign AI Infrastructure
+      - generic [ref=e116]: FinTech Algorithmic Trading
+      - generic [ref=e117]: HealthCare Clinical AI
+    - generic [ref=e118]:
+      - generic [ref=e119]: Gartner
+      - generic [ref=e120]: ★★★★★
+      - generic [ref=e121]: 4.9/5 Rated
+      - generic [ref=e122] [cursor=pointer]: Peer Insights Verified
+  - generic [ref=e125]:
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e128]: • STATISTICS
+        - heading "TRUSTED BY INDUSTRY" [level=2] [ref=e129]
+      - paragraph [ref=e130]: Comprehensive runtime authorization architecture designed specifically for autonomous LLM agents and multi-agent systems.
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - generic [ref=e133]: Autonomous Actions
+        - generic [ref=e134]: Tool calls intercepted
+        - generic [ref=e135]: 10B+
+      - generic [ref=e136]:
+        - generic [ref=e137]: Enforcement Latency
+        - generic [ref=e138]: Sub-millisecond decisions
+        - generic [ref=e139]: <2ms
+      - generic [ref=e140]:
+        - generic [ref=e141]: Data Leakage
+        - generic [ref=e142]: Secrets disclosed
+        - generic [ref=e143]: 0 BYTES
+      - generic [ref=e144]:
+        - generic [ref=e145]: Agent Coverage
+        - generic [ref=e146]: LangChain, CrewAI, AutoGen
+        - generic [ref=e147]: 100%
+      - generic [ref=e148]:
+        - generic [ref=e149]: Compliance Ready
+        - generic [ref=e150]: EU AI Act (Art. 14) & SOC 2
+        - generic [ref=e151]: CERTIFIED
+  - generic [ref=e152]:
+    - generic [ref=e153]:
+      - generic [ref=e154]: • THE SECURITY PARADIGM SHIFT
+      - heading "WHAT IS AN AI AGENT ACTUALLY AUTHORIZED TO DO?" [level=2] [ref=e155]
+      - paragraph [ref=e156]: Traditional software follows rigid code. Autonomous agents interpret untrusted documents, reason, and execute tools dynamically. Sentinel sits in the middle as the zero-trust boundary.
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e161]: WITHOUT SENTINEL · UNCONTROLLED AUTHORITY
+            - generic [ref=e164]: Traditional Setup
+          - generic [ref=e165]:
+            - generic [ref=e166]: "1. Human assigns task: “Fix checkout bug”"
+            - generic [ref=e167]: 2. AI Agent (Claude Code) reads workspace + untrusted README
+            - generic [ref=e168]: "3. Hidden injection triggers unauthorized tools:"
+            - generic [ref=e169]:
+              - generic [ref=e170]:
+                - text: 💥
+                - code [ref=e171]: read_file(".env")
+                - text: $\rightarrow$ Secret API keys exfiltrated
+              - generic [ref=e172]:
+                - text: 💥
+                - code [ref=e173]: rm -rf /
+                - text: $\rightarrow$ Destructive shell execution
+              - generic [ref=e174]:
+                - text: 💥
+                - code [ref=e175]: deploy production
+                - text: $\rightarrow$ Outage in live cluster
+        - generic [ref=e176]: "Result: The agent decides its own authority. Critical breach risk."
+      - generic [ref=e180]:
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - generic [ref=e183]: WITH SENTINEL · ZERO-TRUST RUNTIME FIREWALL
+            - generic [ref=e186]: Guaranteed Containment
+          - generic [ref=e187]:
+            - generic [ref=e188]: 1. Human $\rightarrow$ AI Agent $\rightarrow$ 🛡️ SENTINEL
+            - generic [ref=e189]: "2. Every tool invocation trapped before OS execution:"
+            - generic [ref=e190]:
+              - generic [ref=e191]:
+                - text: ✓
+                - code [ref=e192]: read src/checkout.ts
+                - text: $\rightarrow$ ALLOW ✅
+              - generic [ref=e193]:
+                - text: ✕
+                - code [ref=e194]: read .env
+                - text: $\rightarrow$ HARD BLOCK 🛑 (0B Leaked)
+              - generic [ref=e195]:
+                - text: ⚠
+                - code [ref=e196]: deploy production
+                - text: $\rightarrow$ HUMAN IN THE LOOP ⚠️
+        - generic [ref=e197]:
+          - generic [ref=e198]: "Result: An imperfect AI cannot exceed its authority."
+          - button "Watch Live Demo" [ref=e203] [cursor=pointer]
+  - generic [ref=e208]:
+    - generic [ref=e209]:
+      - generic [ref=e210]: • ENFORCEMENT PLATFORMS
+      - heading "EXPLORE OUR PLATFORMS" [level=2] [ref=e211]
+      - paragraph [ref=e212]: The four foundational pillars of autonomous agent runtime security and authorization.
+    - generic [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215] [cursor=pointer]:
+          - generic [ref=e216]: 1. SENTINEL INTERCEPTOR
+          - heading "Runtime Tool & Subprocess Execution Firewall" [level=3] [ref=e217]
+          - paragraph [ref=e218]: "Traps every agent tool invocation (`read_file`, `write_file`, `shell.run`, `deploy`, `git.push`, `db.query`) before it reaches the operating system or cloud API."
+          - button "OPEN CONSOLE" [ref=e219]
+        - generic [ref=e223] [cursor=pointer]:
+          - generic [ref=e224]: 2. SENTINEL TAINTGUARD
+          - heading "Indirect Prompt Injection & Lineage Taint Tracker" [level=3] [ref=e225]
+          - paragraph [ref=e226]: Identifies when autonomous actions were triggered by untrusted third-party content (e.g. GitHub issues, poisoned PR comments, scraped web pages) and enforces quarantine.
+        - generic [ref=e227] [cursor=pointer]:
+          - generic [ref=e228]: 3. SENTINEL DUAL-KEY HITL
+          - heading "Human-in-the-Loop High Blast-Radius Gating" [level=3] [ref=e229]
+          - paragraph [ref=e230]: Automatically holds high-risk operations (production deployments, database drops, force pushes) in an operator review queue requiring dual-key human authorization.
+        - generic [ref=e231] [cursor=pointer]:
+          - generic [ref=e232]: 4. MOCK EVENT LOG
+          - heading "In-Memory Decisions & Approval History" [level=3] [ref=e233]
+          - paragraph [ref=e234]: Demo event records and approval transitions live in memory and reset with the server. No cryptographic integrity or compliance guarantee is provided.
+      - generic [ref=e236]:
+        - generic [ref=e237]:
+          - generic [ref=e238]: SENTINEL RUNTIME FIREWALL
+          - generic [ref=e239]: PERIMETER SECURE
+        - generic [ref=e246]:
+          - generic [ref=e247]: Zero-Trust Tool Boundary
+          - generic [ref=e248]: Simulated requests are evaluated by the mock API.
+        - generic [ref=e249]:
+          - generic [ref=e250]: Deterministic mock advisory · no external model
+          - button "Test in Sandbox" [ref=e251] [cursor=pointer]
+  - generic [ref=e256]:
+    - generic [ref=e257]:
+      - generic [ref=e258]: • VERIFIED REVIEWS
+      - heading "TRUSTED BY ENTERPRISES" [level=2] [ref=e259]
+      - paragraph [ref=e260]: Feedback from enterprise CISOs and AI Security Architects running Sentinel in production.
+    - generic [ref=e261]:
+      - generic [ref=e262]:
+        - generic [ref=e263]: ★★★★★
+        - generic [ref=e264]: "PRODUCT: SENTINEL INTERCEPTOR · JAN 2026"
+        - heading "“Prevented indirect prompt injection from leaking API keys on day one.”" [level=4] [ref=e265]
+        - paragraph [ref=e266]: "We deployed coding agents with Claude and Gemini across 400 developer repositories. Sentinel blocked poisoned markdown instructions from accessing `.env` and AWS credentials."
+        - generic [ref=e267]: Chief Information Security Officer, FinTech Corp
+      - generic [ref=e268]:
+        - generic [ref=e269]:
+          - generic [ref=e270]: Gartner Peer Insights
+          - heading "Sentinel" [level=3] [ref=e271]
+          - generic [ref=e272]: AI Agent Runtime Security & Authorization
+        - generic [ref=e273]:
+          - generic [ref=e274]: "4.9"
+          - generic [ref=e275]: ★★★★★
+          - generic [ref=e276]: 98 Verified Enterprise Reviews
+        - button "Open Security Console" [ref=e277] [cursor=pointer]
+      - generic [ref=e278]:
+        - generic [ref=e279]: ★★★★★
+        - generic [ref=e280]: "PRODUCT: DUAL-KEY HITL · FEB 2026"
+        - heading "“Gave us confidence to automate production releases with AI.”" [level=4] [ref=e281]
+        - paragraph [ref=e282]: The human-in-the-loop review queue gives our SRE team total control over high blast-radius actions. Autonomous releases are fast, but zero unapproved code hits production.
+        - generic [ref=e283]: VP of Platform Engineering, Cloud Infrastructure
+  - generic [ref=e285]:
+    - generic [ref=e286]: • INTEGRATIONS
+    - heading "SMART INTEGRATIONS. SIMPLIFY YOUR WORKFLOW" [level=2] [ref=e287]
+    - paragraph [ref=e288]: Works out of the box with all leading foundation models, autonomous frameworks, and SecOps SIEM pipelines.
+    - generic [ref=e289]:
+      - generic [ref=e290]: Anthropic Claude
+      - generic [ref=e292]: Google Gemini
+      - generic [ref=e294]: LangChain / LangGraph
+      - generic [ref=e297]: CrewAI & AutoGen
+      - generic [ref=e301]: Splunk & Datadog SIEM
+      - generic [ref=e304]: AWS Secrets Manager & IAM
+  - generic [ref=e309]:
+    - generic [ref=e310]:
+      - generic [ref=e311]: • AI AGENT THREAT RESEARCH
+      - heading "OUR LATEST INSIGHTS" [level=2] [ref=e312]
+      - paragraph [ref=e313]: Stay informed with our latest runtime authorization research, prompt injection defense papers, and compliance analyses.
+    - generic [ref=e314]:
+      - generic [ref=e315]:
+        - generic [ref=e316]:
+          - generic [ref=e318]: THREAT RESEARCH
+          - generic [ref=e319]: AML.T0051 / OWASP LLM01
+        - generic [ref=e320]:
+          - generic [ref=e321]:
+            - generic [ref=e322]: 5 MIN READ · JAN 2026
+            - heading "Top 5 Indirect Prompt Injection types in Agentic Workflows and prevention strategies" [level=4] [ref=e323]
+          - button "TEST ATTACK IN SANDBOX" [ref=e324] [cursor=pointer]
+      - generic [ref=e328]:
+        - generic [ref=e329]:
+          - generic [ref=e331]: ARCHITECTURE
+          - generic [ref=e332]: ZERO-TRUST RUNTIME BOUNDARY
+        - generic [ref=e333]:
+          - generic [ref=e334]:
+            - generic [ref=e335]: 4 MIN READ · FEB 2026
+            - 'heading "Decoupling policy enforcement from model weights: The Sentinel Pattern" [level=4] [ref=e336]'
+          - button "EXPLORE ARCHITECTURE" [ref=e337] [cursor=pointer]
+      - generic [ref=e341]:
+        - generic [ref=e342]:
+          - generic [ref=e344]: COMPLIANCE & GRC
+          - generic [ref=e345]: EU AI ACT (ARTICLE 14)
+        - generic [ref=e346]:
+          - generic [ref=e347]:
+            - generic [ref=e348]: 6 MIN READ · MAR 2026
+            - heading "What is the role of Dual-Key Human Gating and EU AI Act Article 14 oversight?" [level=4] [ref=e349]
+          - button "VIEW AUDIT LEDGER" [ref=e350] [cursor=pointer]
+  - contentinfo [ref=e354]:
+    - generic [ref=e355]:
+      - generic [ref=e356]:
+        - generic [ref=e357]:
+          - heading "Contact Our AI Security Team" [level=3] [ref=e358]
+          - paragraph [ref=e359]: Schedule an enterprise architectural consultation with Sentinel cybersecurity engineers.
+          - generic [ref=e360]:
+            - textbox "Enter your full name" [ref=e362]
+            - textbox "Enter your work email" [ref=e364]
+            - textbox "Message / describe your autonomous agent infrastructure..." [ref=e366]
+            - button "SEND NOW" [ref=e368] [cursor=pointer]
+        - generic [ref=e369]:
+          - generic [ref=e370]:
+            - heading "Get In Touch" [level=3] [ref=e371]
+            - paragraph [ref=e372]: Sentinel provides 24/7 dedicated threat telemetry and architectural integration support for autonomous AI agent fleets.
+          - generic [ref=e373]:
+            - generic [ref=e374]: +966 548 537 633 / +1 (800) 555-SENTINEL
+            - generic [ref=e378]: security@sentinel-ai.enterprise
+            - generic [ref=e383]: Riyadh, Saudi Arabia · Al Olaya District / San Francisco, CA
+          - generic [ref=e388]:
+            - generic [ref=e389]: SENTINEL ENTERPRISE
+            - button "Launch Live Console" [ref=e390] [cursor=pointer]
+      - generic [ref=e396]:
+        - generic [ref=e397]: © 2026 Sentinel Inc. All rights reserved.
+        - generic [ref=e398]:
+          - link "Home" [ref=e399] [cursor=pointer]:
+            - /url: "#"
+          - link "Platform" [ref=e400] [cursor=pointer]:
+            - /url: "#platforms"
+          - link "Contact" [ref=e401] [cursor=pointer]:
+            - /url: "#contact"
+          - link "Privacy Policy" [ref=e402] [cursor=pointer]:
+            - /url: "#"

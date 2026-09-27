@@ -10,17 +10,17 @@ const request = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-test("allows an in-policy mock source read", () => {
+test("allows an in-policy mock source read", async () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(request());
+  const event = await runtime.authorize(request());
   assert.equal(event.decision, "ALLOW");
   assert.equal(event.status, "RESOLVED");
   assert.equal(runtime.listRecords().length, 1);
 });
 
-test("blocks secret reads from untrusted context", () => {
+test("blocks secret reads from untrusted context", async () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(
+  const event = await runtime.authorize(
     request({
       resource: ".env",
       context: { source: "untrusted repository content", trust: "UNTRUSTED" },
@@ -31,9 +31,9 @@ test("blocks secret reads from untrusted context", () => {
   assert.match(event.policy.reason, /untrusted|secret|inaccessible/i);
 });
 
-test("holds production deployment for review and appends approval without changing decision record", () => {
+test("holds production deployment for review and appends approval without changing decision record", async () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(
+  const event = await runtime.authorize(
     request({
       agent_id: "agent_release_01",
       capability: "deploy.production",
@@ -71,9 +71,9 @@ test("holds production deployment for review and appends approval without changi
   );
 });
 
-test("rejects approval for a blocked request", () => {
+test("rejects approval for a blocked request", async () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(request({ resource: ".env" }));
+  const event = await runtime.authorize(request({ resource: ".env" }));
   assert.throws(
     () => runtime.resolveApproval(event.id, "APPROVED", "operator", "reason"),
     /Only pending REVIEW/,
@@ -81,35 +81,35 @@ test("rejects approval for a blocked request", () => {
   assert.equal(runtime.listRecords().length, 1);
 });
 
-test("rejects unknown agents and malformed authorization requests", () => {
+test("rejects unknown agents and malformed authorization requests", async () => {
   const runtime = new MockSentinelRuntime();
-  assert.throws(
+  await assert.rejects(
     () => runtime.authorize(request({ agent_id: "missing" })),
     /Unknown agent/,
   );
-  assert.throws(
+  await assert.rejects(
     () => runtime.authorize(request({ resource: "" })),
     /required strings/,
   );
 });
 
-test("updated mock policy configuration controls later authorization decisions", () => {
+test("updated mock policy configuration controls later authorization decisions", async () => {
   const runtime = new MockSentinelRuntime();
   const config = runtime.getConfig();
   config.policies[0].groups[0].rules[0].dec = "BLOCK";
   runtime.updateConfig(config.agents, config.policies);
-  assert.equal(runtime.authorize(request()).decision, "BLOCK");
+  assert.equal((await runtime.authorize(request())).decision, "BLOCK");
 
   runtime.reset();
-  assert.equal(runtime.authorize(request()).decision, "ALLOW");
+  assert.equal((await runtime.authorize(request())).decision, "ALLOW");
 });
 
-test("requires trusted provenance when a matched policy rule says so", () => {
+test("requires trusted provenance when a matched policy rule says so", async () => {
   const runtime = new MockSentinelRuntime();
   const config = runtime.getConfig();
   config.policies[0].groups[0].rules[0].requireTrustedOrigin = true;
   runtime.updateConfig(config.agents, config.policies);
-  const event = runtime.authorize(
+  const event = await runtime.authorize(
     request({
       context: { source: "untrusted pull request", trust: "UNTRUSTED" },
     }),
@@ -117,9 +117,9 @@ test("requires trusted provenance when a matched policy rule says so", () => {
   assert.equal(event.decision, "BLOCK");
 });
 
-test("records quarantined agent requests as blocked decisions", () => {
+test("records quarantined agent requests as blocked decisions", async () => {
   const runtime = new MockSentinelRuntime();
-  const event = runtime.authorize(request({ agent_id: "agent_redteam_01" }));
+  const event = await runtime.authorize(request({ agent_id: "agent_redteam_01" }));
   assert.equal(event.decision, "BLOCK");
   assert.equal(event.status, "PREVENTED");
   assert.equal(runtime.listRecords().length, 1);

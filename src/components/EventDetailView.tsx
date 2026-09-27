@@ -253,7 +253,9 @@ export const EventDetailView: React.FC<EventDetailViewProps> = ({
                       </span>
                     </div>
                     <div className="text-[10px] text-[#626B76]">
-                      Deterministic mock analysis · no external model
+                      {event.analysis.engine === "gemini-2.0-flash"
+                        ? "Live Gemini contextual analysis · advisory only"
+                        : "Deterministic mock analysis · no external model"}
                     </div>
                   </div>
                 </div>

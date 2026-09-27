@@ -1,0 +1,208 @@
+- generic [ref=e480]:
+  - complementary [ref=e481]:
+    - generic [ref=e486]:
+      - generic [ref=e487]: SENTINEL
+      - generic [ref=e488]: Runtime Authorization
+    - generic [ref=e489]:
+      - generic [ref=e490]: MOCK MODE
+      - generic [ref=e493]: API-backed demo
+    - navigation [ref=e495]:
+      - generic [ref=e496]:
+        - generic [ref=e497]: Portal
+        - button "Homepage / Landing" [ref=e499]
+      - generic [ref=e505]:
+        - generic [ref=e506]: Real-Time
+        - generic [ref=e507]:
+          - button "Overview" [ref=e508]
+          - button "Live Activity LIVE" [ref=e513]:
+            - generic [ref=e514]: Live Activity
+            - generic [ref=e518]: LIVE
+          - button "Security Events 1" [ref=e519]:
+            - generic [ref=e520]: Security Events
+            - generic [ref=e524]: "1"
+          - button "Pending Approvals 1" [ref=e525]:
+            - generic [ref=e526]: Pending Approvals
+            - generic [ref=e531]: "1"
+      - generic [ref=e532]:
+        - generic [ref=e533]: Governance
+        - generic [ref=e534]:
+          - button "Agents Fleet 4" [ref=e535]:
+            - generic [ref=e536]: Agents Fleet
+            - generic [ref=e541]: "4"
+          - button "Policies" [ref=e542]
+          - button "Capability Matrix" [ref=e548]
+      - generic [ref=e552]:
+        - generic [ref=e553]: Testing & Forensics
+        - generic [ref=e554]:
+          - button "Attack Simulator" [ref=e555]
+          - button "Interceptor Sandbox" [ref=e564]
+          - button "Audit Trail & SIEM" [ref=e569]
+          - button "Settings" [ref=e577]
+    - generic [ref=e583]:
+      - generic [ref=e584]:
+        - generic [ref=e585]: Simulated authorization
+        - generic [ref=e586]: MOCK
+      - generic [ref=e587]: We don't need perfect AI. We prevent unlimited authority.
+  - generic [ref=e588]:
+    - banner [ref=e589]:
+      - generic [ref=e590]:
+        - generic [ref=e591]: Sentinel
+        - generic [ref=e592]: /
+        - generic [ref=e593]: Overview
+      - generic [ref=e594]:
+        - button "🌐 Homepage" [ref=e595] [cursor=pointer]
+        - button "1 REVIEW REQUIRED" [ref=e597] [cursor=pointer]
+        - button "STREAMING" [ref=e601] [cursor=pointer]
+        - button "Intercept Sandbox" [ref=e604] [cursor=pointer]
+        - button "Run Demo" [ref=e608] [cursor=pointer]
+    - main [ref=e612]:
+      - generic [ref=e613]:
+        - generic [ref=e614]:
+          - heading "Security Command Center" [level=1] [ref=e615]
+          - paragraph [ref=e616]: Zero-trust runtime authorization boundary. Every autonomous tool call, shell command, and filesystem descriptor is inspected before execution.
+        - generic [ref=e617]:
+          - generic [ref=e618]:
+            - generic [ref=e619]: The Sentinel Security Philosophy
+            - paragraph [ref=e622]: “We're not trying to make AI agents perfect. We're making sure an imperfect AI agent doesn't have unlimited authority.”
+            - paragraph [ref=e623]: Assume the AI can make a bad decision from poisoned context. Sentinel ensures that decision never exceeds its defined role boundary.
+          - generic [ref=e624]: Mock data only
+        - generic [ref=e629]:
+          - generic [ref=e630]:
+            - generic [ref=e631]: Configured Agents
+            - generic [ref=e636]:
+              - text: "4"
+              - generic [ref=e637]: /6
+            - generic [ref=e638]: Fleet active
+          - generic [ref=e639]:
+            - generic [ref=e640]: Actions Inspected
+            - generic [ref=e648]: "3"
+            - generic [ref=e649]: Requests evaluated by mock API
+          - generic [ref=e650]:
+            - generic [ref=e651]: Allowed
+            - generic [ref=e656]: "1"
+            - generic [ref=e657]: Within authority
+          - generic [ref=e658] [cursor=pointer]:
+            - generic [ref=e659]: Human Review
+            - generic [ref=e664]:
+              - text: "1"
+              - generic [ref=e665]: ACTION REQ
+            - generic [ref=e666]: High blast radius
+          - generic [ref=e667]:
+            - generic [ref=e668]: Intrusions Blocked
+            - generic [ref=e674]: "1"
+            - generic [ref=e675]: No real data is accessed in mock mode
+        - generic [ref=e676]:
+          - generic [ref=e677]:
+            - generic [ref=e678]:
+              - generic [ref=e679]: WITHOUT SENTINEL (VULNERABLE)
+              - generic [ref=e681]: Unrestricted Tool Authority
+            - generic [ref=e682]:
+              - generic [ref=e683]:
+                - generic [ref=e684]: Developer / Prompt
+                - generic [ref=e687]: Claude Code
+                - generic [ref=e690]: Unchecked Host Shell & Files
+              - generic [ref=e691]:
+                - text: 💥 Untrusted README injection commands agent to read .env $\rightarrow$
+                - strong [ref=e692]: Secrets Exfiltrated!
+              - generic [ref=e693]:
+                - text: 💥 Hallucinated script commands
+                - code [ref=e694]: rm -rf /
+                - text: $\rightarrow$
+                - strong [ref=e695]: Filesystem Destroyed!
+          - generic [ref=e696]:
+            - generic [ref=e697]:
+              - generic [ref=e698]: WITH SENTINEL (ZERO-TRUST GOVERNANCE)
+              - generic [ref=e700]: Decoupled Authorization Proxy
+            - generic [ref=e701]:
+              - generic [ref=e702]:
+                - generic [ref=e703]: Developer
+                - generic [ref=e706]: Claude Code
+                - generic [ref=e709]: 🛡️ SENTINEL
+                - generic [ref=e712]: Target Systems
+              - generic [ref=e713]:
+                - text: ✓ Normal edits to
+                - code [ref=e714]: src/**
+                - text: $\rightarrow$ ALLOW ✅
+              - generic [ref=e715]:
+                - text: ✕ Secret probe to
+                - code [ref=e716]: .env
+                - text: $\rightarrow$ HARD BLOCK 🛑 (0B Leaked)
+              - generic [ref=e717]:
+                - text: ⚠ High blast-radius
+                - code [ref=e718]: deploy production
+                - text: $\rightarrow$ HUMAN REVIEW ⚠️
+        - generic [ref=e719]:
+          - generic [ref=e720]:
+            - generic [ref=e721]:
+              - generic [ref=e722]:
+                - generic [ref=e723]: Recent Intercepted Events
+                - generic [ref=e724]: (3 total)
+              - button "View all" [ref=e725] [cursor=pointer]
+            - generic [ref=e729]:
+              - generic [ref=e730] [cursor=pointer]:
+                - generic [ref=e731]:
+                  - generic [ref=e732]: 11:50
+                  - generic [ref=e733]: Release Agent
+                  - generic [ref=e734]: deploy production --tag=demo-v1
+                - generic [ref=e735]: ⚠REVIEW
+              - generic [ref=e737] [cursor=pointer]:
+                - generic [ref=e738]:
+                  - generic [ref=e739]: 11:50
+                  - generic [ref=e740]: Coding Agent
+                  - generic [ref=e741]: filesystem.read .env
+                - generic [ref=e742]:
+                  - generic [ref=e743]: UNTRUSTED TAINT
+                  - generic [ref=e744]: ✕BLOCK
+              - generic [ref=e745] [cursor=pointer]:
+                - generic [ref=e746]:
+                  - generic [ref=e747]: 11:50
+                  - generic [ref=e748]: Coding Agent
+                  - generic [ref=e749]: filesystem.read src/auth.ts
+                - generic [ref=e750]: ✓ALLOW
+          - generic [ref=e752]:
+            - generic [ref=e753]:
+              - generic [ref=e754]: Attached Agent Fleet
+              - button "Manage" [ref=e755] [cursor=pointer]
+            - generic [ref=e759]:
+              - generic [ref=e760] [cursor=pointer]:
+                - generic [ref=e761]:
+                  - generic [ref=e762]: Coding Agent
+                  - generic [ref=e765]: Claude 3.7 Sonnet · Development
+                - generic [ref=e766]:
+                  - text: ACTIVE
+                  - generic [ref=e767]: Developer Agent Policy
+              - generic [ref=e768] [cursor=pointer]:
+                - generic [ref=e769]:
+                  - generic [ref=e770]: Release Agent
+                  - generic [ref=e773]: Gemini 2.5 Flash · Production
+                - generic [ref=e774]:
+                  - text: IDLE
+                  - generic [ref=e775]: Release Agent Policy
+              - generic [ref=e776] [cursor=pointer]:
+                - generic [ref=e777]:
+                  - generic [ref=e778]: DB Migration Agent
+                  - generic [ref=e781]: Llama 3 70B · Staging
+                - generic [ref=e782]:
+                  - text: ACTIVE
+                  - generic [ref=e783]: Database Operations Policy
+              - generic [ref=e784] [cursor=pointer]:
+                - generic [ref=e785]:
+                  - generic [ref=e786]: Customer Support Bot
+                  - generic [ref=e789]: GPT-4o · Production
+                - generic [ref=e790]:
+                  - text: ACTIVE
+                  - generic [ref=e791]: Customer Support Policy
+              - generic [ref=e792] [cursor=pointer]:
+                - generic [ref=e793]:
+                  - generic [ref=e794]: Finance Operations Agent
+                  - generic [ref=e797]: GPT-4o · Production
+                - generic [ref=e798]:
+                  - text: ACTIVE
+                  - generic [ref=e799]: Finance Operations Policy
+              - generic [ref=e800] [cursor=pointer]:
+                - generic [ref=e801]:
+                  - generic [ref=e802]: Adversary Probe Agent
+                  - generic [ref=e805]: DeepSeek R1 · Development
+                - generic [ref=e806]:
+                  - text: QUARANTINED
+                  - generic [ref=e807]: Developer Agent Policy
