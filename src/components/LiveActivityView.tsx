@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { SecurityEvent, Decision } from '../types/sentinel';
-import { Search, Filter, Radio, ArrowRight, ShieldAlert, CheckCircle, Clock, Pause, Play, Trash2 } from 'lucide-react';
-import { formatTime } from '../utils/engine';
+import React, { useState } from "react";
+import { SecurityEvent, Decision } from "../types/sentinel";
+import {
+  Search,
+  Filter,
+  Radio,
+  ArrowRight,
+  ShieldAlert,
+  CheckCircle,
+  Clock,
+  Pause,
+  Play,
+  Trash2,
+} from "lucide-react";
+import { formatTime } from "../utils/engine";
 
 interface LiveActivityViewProps {
   events: SecurityEvent[];
   isLive: boolean;
+  streamConnected: boolean;
   onToggleLive: () => void;
   onSelectEvent: (id: string) => void;
   onClearStream?: () => void;
@@ -14,15 +26,16 @@ interface LiveActivityViewProps {
 export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
   events,
   isLive,
+  streamConnected,
   onToggleLive,
   onSelectEvent,
   onClearStream,
 }) => {
-  const [filterDecision, setFilterDecision] = useState<'ALL' | Decision>('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filterDecision, setFilterDecision] = useState<"ALL" | Decision>("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredEvents = events.filter((e) => {
-    if (filterDecision !== 'ALL' && e.decision !== filterDecision) return false;
+    if (filterDecision !== "ALL" && e.decision !== filterDecision) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -41,10 +54,11 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[#E8EAED] flex items-center gap-2">
-            Live Interception Stream
+            Mock Authorization Event Stream
           </h1>
           <p className="text-xs text-[#9AA3AD] mt-0.5">
-            Real-time feed of every tool invocation trapped at the Sentinel execution perimeter.
+            API-backed decisions from this demo process. No real agent tools are
+            run.
           </p>
         </div>
 
@@ -53,12 +67,16 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
             onClick={onToggleLive}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md mono text-xs font-medium border transition-colors cursor-pointer ${
               isLive
-                ? 'bg-[#2ED47A]/10 border-[#2ED47A]/30 text-[#2ED47A]'
-                : 'bg-[#14171B] border-[#2A3038] text-[#9AA3AD]'
+                ? "bg-[#2ED47A]/10 border-[#2ED47A]/30 text-[#2ED47A]"
+                : "bg-[#14171B] border-[#2A3038] text-[#9AA3AD]"
             }`}
           >
-            {isLive ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            <span>{isLive ? 'Pause Stream' : 'Resume Stream'}</span>
+            {isLive ? (
+              <Pause className="w-3.5 h-3.5" />
+            ) : (
+              <Play className="w-3.5 h-3.5" />
+            )}
+            <span>{isLive ? "Pause Stream" : "Resume Stream"}</span>
           </button>
         </div>
       </div>
@@ -67,8 +85,11 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-[#0E1013] border border-[#1E232A] rounded-lg">
         {/* Decision Filters */}
         <div className="flex items-center gap-1.5">
-          {(['ALL', 'ALLOW', 'REVIEW', 'BLOCK'] as const).map((dec) => {
-            const count = dec === 'ALL' ? events.length : events.filter((e) => e.decision === dec).length;
+          {(["ALL", "ALLOW", "REVIEW", "BLOCK"] as const).map((dec) => {
+            const count =
+              dec === "ALL"
+                ? events.length
+                : events.filter((e) => e.decision === dec).length;
             const isSelected = filterDecision === dec;
 
             return (
@@ -77,14 +98,14 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
                 onClick={() => setFilterDecision(dec)}
                 className={`px-2.5 py-1 rounded mono text-[11px] font-medium border transition-all cursor-pointer ${
                   isSelected
-                    ? dec === 'ALLOW'
-                      ? 'bg-[#2ED47A]/20 border-[#2ED47A] text-[#2ED47A]'
-                      : dec === 'REVIEW'
-                      ? 'bg-[#F5A524]/20 border-[#F5A524] text-[#F5A524]'
-                      : dec === 'BLOCK'
-                      ? 'bg-[#FF4D4F]/20 border-[#FF4D4F] text-[#FF4D4F]'
-                      : 'bg-[#4A9EFF]/20 border-[#4A9EFF] text-[#4A9EFF]'
-                    : 'bg-[#14171B] border-[#2A3038] text-[#9AA3AD] hover:bg-[#1A1E24]'
+                    ? dec === "ALLOW"
+                      ? "bg-[#2ED47A]/20 border-[#2ED47A] text-[#2ED47A]"
+                      : dec === "REVIEW"
+                        ? "bg-[#F5A524]/20 border-[#F5A524] text-[#F5A524]"
+                        : dec === "BLOCK"
+                          ? "bg-[#FF4D4F]/20 border-[#FF4D4F] text-[#FF4D4F]"
+                          : "bg-[#4A9EFF]/20 border-[#4A9EFF] text-[#4A9EFF]"
+                    : "bg-[#14171B] border-[#2A3038] text-[#9AA3AD] hover:bg-[#1A1E24]"
                 }`}
               >
                 {dec} ({count})
@@ -110,8 +131,17 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
       <div className="bg-[#0E1013] border border-[#1E232A] rounded-lg overflow-hidden">
         <div className="p-3 px-4 border-b border-[#1E232A] flex items-center justify-between text-xs mono text-[#626B76] bg-[#0A0C0E]">
           <span>STREAM BUFFER ({filteredEvents.length} events)</span>
-          <span className="flex items-center gap-1 text-[#2ED47A]">
-            <Radio className="w-3 h-3 animate-pulse" /> Interceptor Online · &lt;2ms Latency
+          <span
+            className={`flex items-center gap-1 ${streamConnected ? "text-[#2ED47A]" : "text-[#F5A524]"}`}
+          >
+            <Radio
+              className={`w-3 h-3 ${streamConnected ? "animate-pulse" : ""}`}
+            />
+            {streamConnected
+              ? "Mock API connected"
+              : isLive
+                ? "Connecting to mock API"
+                : "Stream paused"}
           </span>
         </div>
 
@@ -123,17 +153,22 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
           ) : (
             filteredEvents.map((evt) => {
               const toneCls =
-                evt.decision === 'ALLOW'
-                  ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                  : evt.decision === 'REVIEW'
-                  ? 'bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30'
-                  : 'bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30';
+                evt.decision === "ALLOW"
+                  ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                  : evt.decision === "REVIEW"
+                    ? "bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30"
+                    : "bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30";
 
-              const glyph = evt.decision === 'ALLOW' ? '✓' : evt.decision === 'REVIEW' ? '⚠' : '✕';
+              const glyph =
+                evt.decision === "ALLOW"
+                  ? "✓"
+                  : evt.decision === "REVIEW"
+                    ? "⚠"
+                    : "✕";
 
-              const parts = evt.action.split(' ');
+              const parts = evt.action.split(" ");
               const fn = parts[0];
-              const arg = parts.slice(1).join(' ');
+              const arg = parts.slice(1).join(" ");
 
               return (
                 <div
@@ -160,12 +195,14 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                    {evt.source.trust === 'UNTRUSTED' && (
+                    {evt.source.trust === "UNTRUSTED" && (
                       <span className="mono text-[10px] text-[#FF4D4F] px-1.5 py-0.5 rounded bg-[#FF4D4F]/10 border border-[#FF4D4F]/25">
                         UNTRUSTED ORIGIN
                       </span>
                     )}
-                    <span className={`mono text-[10px] px-2 py-0.5 rounded font-semibold border ${toneCls}`}>
+                    <span
+                      className={`mono text-[10px] px-2 py-0.5 rounded font-semibold border ${toneCls}`}
+                    >
                       <span className="mr-1">{glyph}</span>
                       {evt.decision}
                     </span>

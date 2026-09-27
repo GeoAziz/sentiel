@@ -1,28 +1,18 @@
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createMockApiRouter } from "./src/runtime/httpApi";
-import { initializeBackendRuntime } from "./src/backend/runtime";
+import { createMockApiRouter } from "./httpApi";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = Number.parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json({ limit: "32kb" }));
+app.use(createMockApiRouter());
 
 async function startServer() {
-  const backendState = await initializeBackendRuntime();
-  app.use(createMockApiRouter());
-
-  app.get("/api/backend-status", (_req, res) => {
-    res.json({
-      ...backendState,
-      mockOnly: true,
-    });
-  });
-
   if (process.env.NODE_ENV === "production") {
-    const distributionDirectory = path.resolve(currentDirectory, "dist");
+    const distributionDirectory = path.resolve(currentDirectory, "../../dist");
     app.use(express.static(distributionDirectory));
     app.get("*", (_req, res) => {
       res.sendFile(path.join(distributionDirectory, "index.html"));
@@ -37,8 +27,7 @@ async function startServer() {
   }
 
   app.listen(port, "0.0.0.0", () => {
-    console.log(`Sentinel backend listening on http://0.0.0.0:${port}`);
-    console.log(`Backend mode: ${backendState.mode}`);
+    console.log(`Sentinel mock runtime listening on http://0.0.0.0:${port}`);
   });
 }
 

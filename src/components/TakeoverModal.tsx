@@ -1,7 +1,14 @@
-import React, { useEffect } from 'react';
-import { SecurityEvent } from '../types/sentinel';
-import { ShieldAlert, ArrowRight, CheckCircle2, X, ExternalLink, Lock } from 'lucide-react';
-import { formatTime } from '../utils/engine';
+import React, { useEffect } from "react";
+import { SecurityEvent } from "../types/sentinel";
+import {
+  ShieldAlert,
+  ArrowRight,
+  CheckCircle2,
+  X,
+  ExternalLink,
+  Lock,
+} from "lucide-react";
+import { formatTime } from "../utils/engine";
 
 interface TakeoverModalProps {
   event: SecurityEvent | null;
@@ -9,25 +16,29 @@ interface TakeoverModalProps {
   onViewEvent: (id: string) => void;
 }
 
-export const TakeoverModal: React.FC<TakeoverModalProps> = ({ event, onClose, onViewEvent }) => {
+export const TakeoverModal: React.FC<TakeoverModalProps> = ({
+  event,
+  onClose,
+  onViewEvent,
+}) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
   if (!event) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#040507]/85 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div 
+      <div
         className="w-full max-w-[620px] bg-[#0E1013] border border-[#FF4D4F]/35 rounded-xl shadow-[0_0_80px_rgba(255,77,79,0.22),0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden relative"
         role="dialog"
         aria-modal="true"
@@ -46,7 +57,8 @@ export const TakeoverModal: React.FC<TakeoverModalProps> = ({ event, onClose, on
                 ACTION BLOCKED
               </div>
               <div className="mono text-xs text-[#9AA3AD] mt-0.5">
-                Sentinel intercepted and neutralized unauthorized tool invocation
+                Sentinel intercepted and neutralized unauthorized tool
+                invocation
               </div>
             </div>
           </div>
@@ -70,7 +82,7 @@ export const TakeoverModal: React.FC<TakeoverModalProps> = ({ event, onClose, on
           </div>
           <ArrowRight className="w-3.5 h-3.5 text-[#3F464E] shrink-0" />
           <div className="px-2.5 py-1 rounded bg-[#4A9EFF]/10 border border-[#4A9EFF]/30 text-[#4A9EFF] font-medium">
-            3. POLICY ENGINE
+            3. POLICY ENGINE (AUTHORITATIVE)
           </div>
           <ArrowRight className="w-3.5 h-3.5 text-[#3F464E] shrink-0" />
           <div className="px-2.5 py-1 rounded bg-[#FF4D4F]/15 border border-[#FF4D4F]/40 text-[#FF4D4F] font-semibold shadow-[0_0_15px_rgba(255,77,79,0.3)]">
@@ -85,8 +97,10 @@ export const TakeoverModal: React.FC<TakeoverModalProps> = ({ event, onClose, on
               Target Agent
             </span>
             <span className="mono text-sm text-[#E8EAED]">
-              {event.agent.name}{' '}
-              <span className="text-[#626B76] text-xs">({event.agent.model})</span>
+              {event.agent.name}{" "}
+              <span className="text-[#626B76] text-xs">
+                ({event.agent.model})
+              </span>
             </span>
           </div>
 
@@ -113,24 +127,57 @@ export const TakeoverModal: React.FC<TakeoverModalProps> = ({ event, onClose, on
               Source Trust
             </span>
             <div>
-              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded mono text-[10px] font-semibold border ${
-                event.source.trust === 'UNTRUSTED'
-                  ? 'bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/35'
-                  : 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/35'
-              }`}>
+              <span
+                className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded mono text-[10px] font-semibold border ${
+                  event.source.trust === "UNTRUSTED"
+                    ? "bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/35"
+                    : "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/35"
+                }`}
+              >
                 {event.source.trust}
               </span>
             </div>
           </div>
 
-          <div className="grid grid-cols-[120px_1fr] gap-3 py-2 items-baseline">
+          <div className="grid grid-cols-[120px_1fr] gap-3 py-2 border-b border-[#1E232A] items-baseline">
             <span className="text-[11px] uppercase tracking-wider text-[#626B76] font-semibold">
-              Policy Reason
+              Policy Rule
             </span>
-            <span className="text-xs text-[#9AA3AD] leading-relaxed">
-              {event.policy.reason}
-            </span>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="mono text-[10px] px-1.5 py-0.5 rounded bg-[#2ED47A]/10 text-[#2ED47A] border border-[#2ED47A]/30 font-semibold tracking-wider uppercase">
+                  AUTHORITATIVE
+                </span>
+                <span className="mono text-xs text-[#E8EAED] font-semibold">
+                  {event.policy.name}
+                </span>
+              </div>
+              <span className="text-xs text-[#9AA3AD] leading-relaxed">
+                {event.policy.reason}
+              </span>
+            </div>
           </div>
+
+          {event.analysis && (
+            <div className="grid grid-cols-[120px_1fr] gap-3 py-2 items-baseline">
+              <span className="text-[11px] uppercase tracking-wider text-[#626B76] font-semibold">
+                AI Threat Scan
+              </span>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="mono text-[10px] px-1.5 py-0.5 rounded bg-[#4A9EFF]/15 text-[#4A9EFF] border border-[#4A9EFF]/30 font-semibold tracking-wider uppercase">
+                    ADVISORY · NOT AUTHORITATIVE
+                  </span>
+                  <span className="text-[10px] text-[#626B76] mono">
+                    Confidence: {event.analysis.confidence}%
+                  </span>
+                </div>
+                <div className="text-xs text-[#F5A524] mono">
+                  {event.analysis.threat}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 0 Data Exposed Assurance Banner */}

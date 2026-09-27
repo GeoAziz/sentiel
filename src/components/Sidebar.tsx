@@ -1,28 +1,26 @@
-import React from 'react';
-import { 
-  Shield, 
-  Activity, 
-  AlertTriangle, 
-  Bot, 
-  FileText, 
-  Sliders, 
-  Radio, 
-  CheckCircle, 
-  Lock, 
-  FlaskConical, 
-  FileCode, 
+import React from "react";
+import {
+  Shield,
+  Activity,
+  AlertTriangle,
+  Bot,
+  FileText,
+  Sliders,
+  Radio,
+  Lock,
+  FlaskConical,
+  FileCode,
   Settings,
-  Sparkles,
   Zap,
-  Globe
-} from 'lucide-react';
+  Globe,
+} from "lucide-react";
 
 interface NavItem {
   id: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: string;
-  badgeType?: 'live' | 'block' | 'review';
+  badgeType?: "live" | "block" | "review";
   count?: number;
 }
 
@@ -41,7 +39,6 @@ interface SidebarProps {
     activeAgents: number;
   };
   isLive: boolean;
-  geminiOnline?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -49,39 +46,61 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNavigate,
   stats,
   isLive,
-  geminiOnline = true,
 }) => {
   const navSections: NavSection[] = [
     {
-      title: 'Portal',
+      title: "Portal",
+      items: [{ id: "landing", label: "Homepage / Landing", icon: Globe }],
+    },
+    {
+      title: "Real-Time",
       items: [
-        { id: 'landing', label: 'Homepage / Landing', icon: Globe },
+        { id: "overview", label: "Overview", icon: Shield },
+        {
+          id: "activity",
+          label: "Live Activity",
+          icon: Activity,
+          badge: isLive ? "LIVE" : undefined,
+          badgeType: "live",
+        },
+        {
+          id: "events",
+          label: "Security Events",
+          icon: AlertTriangle,
+          badge:
+            stats.blockedCount > 0 ? String(stats.blockedCount) : undefined,
+          badgeType: "block",
+        },
+        {
+          id: "approvals",
+          label: "Pending Approvals",
+          icon: Lock,
+          badge:
+            stats.pendingCount > 0 ? String(stats.pendingCount) : undefined,
+          badgeType: "review",
+        },
       ],
     },
     {
-      title: 'Real-Time',
+      title: "Governance",
       items: [
-        { id: 'overview', label: 'Overview', icon: Shield },
-        { id: 'activity', label: 'Live Activity', icon: Activity, badge: isLive ? 'LIVE' : undefined, badgeType: 'live' },
-        { id: 'events', label: 'Security Events', icon: AlertTriangle, badge: stats.blockedCount > 0 ? String(stats.blockedCount) : undefined, badgeType: 'block' },
-        { id: 'approvals', label: 'Pending Approvals', icon: Lock, badge: stats.pendingCount > 0 ? String(stats.pendingCount) : undefined, badgeType: 'review' },
+        {
+          id: "agents",
+          label: "Agents Fleet",
+          icon: Bot,
+          count: stats.activeAgents,
+        },
+        { id: "policies", label: "Policies", icon: FileText },
+        { id: "tools", label: "Capability Matrix", icon: Sliders },
       ],
     },
     {
-      title: 'Governance',
+      title: "Testing & Forensics",
       items: [
-        { id: 'agents', label: 'Agents Fleet', icon: Bot, count: stats.activeAgents },
-        { id: 'policies', label: 'Policies', icon: FileText },
-        { id: 'tools', label: 'Capability Matrix', icon: Sliders },
-      ],
-    },
-    {
-      title: 'Testing & Forensics',
-      items: [
-        { id: 'simulator', label: 'Attack Simulator', icon: Radio },
-        { id: 'sandbox', label: 'Interceptor Sandbox', icon: FlaskConical },
-        { id: 'audit', label: 'Audit Trail & SIEM', icon: FileCode },
-        { id: 'settings', label: 'Settings', icon: Settings },
+        { id: "simulator", label: "Attack Simulator", icon: Radio },
+        { id: "sandbox", label: "Interceptor Sandbox", icon: FlaskConical },
+        { id: "audit", label: "Audit Trail & SIEM", icon: FileCode },
+        { id: "settings", label: "Settings", icon: Settings },
       ],
     },
   ];
@@ -106,21 +125,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* System Status Pill */}
-      <div className="mx-3 mt-3 p-2 px-3 bg-[#2ED47A]/10 border border-[#2ED47A]/25 rounded-md flex items-center justify-between">
+      <div className="mx-3 mt-3 p-2 px-3 bg-[#F5A524]/10 border border-[#F5A524]/25 rounded-md flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#2ED47A] shadow-[0_0_8px_rgba(46,212,122,0.8)] animate-pulse-green" />
-          <span className="mono text-[11px] font-semibold text-[#2ED47A] tracking-wider">
-            PROTECTED
+          <div className="w-2 h-2 rounded-full bg-[#F5A524]" />
+          <span className="mono text-[11px] font-semibold text-[#F5A524] tracking-wider">
+            MOCK MODE
           </span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="mono text-[10px] text-[#626B76]">v0.4.2</span>
-          {geminiOnline && (
-            <span className="flex items-center text-[#4A9EFF] text-[10px] mono bg-[#4A9EFF]/10 px-1 py-0.5 rounded border border-[#4A9EFF]/20" title="Gemini 3.8 Flash AI Security Engine Active">
-              <Sparkles className="w-2.5 h-2.5 mr-0.5" />
-              AI
-            </span>
-          )}
+          <span className="mono text-[10px] text-[#626B76]">
+            API-backed demo
+          </span>
         </div>
       </div>
 
@@ -134,10 +149,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="space-y-0.5">
               {sec.items.map((item) => {
                 const Icon = item.icon;
-                const isActive = currentRoute === item.id || 
-                  (item.id === 'events' && currentRoute === 'event-detail') ||
-                  (item.id === 'agents' && currentRoute === 'agent-detail') ||
-                  (item.id === 'policies' && currentRoute === 'policy-detail');
+                const isActive =
+                  currentRoute === item.id ||
+                  (item.id === "events" && currentRoute === "event-detail") ||
+                  (item.id === "agents" && currentRoute === "agent-detail") ||
+                  (item.id === "policies" && currentRoute === "policy-detail");
 
                 return (
                   <button
@@ -145,14 +161,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => onNavigate(item.id)}
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-[13px] transition-all duration-150 group text-left ${
                       isActive
-                        ? 'bg-[#14171B] text-[#E8EAED] font-medium border-l-2 border-l-[#4A9EFF]'
-                        : 'text-[#9AA3AD] hover:bg-[#171B21] hover:text-[#E8EAED]'
+                        ? "bg-[#14171B] text-[#E8EAED] font-medium border-l-2 border-l-[#4A9EFF]"
+                        : "text-[#9AA3AD] hover:bg-[#171B21] hover:text-[#E8EAED]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Icon
                         className={`w-4 h-4 transition-colors shrink-0 ${
-                          isActive ? 'text-[#4A9EFF]' : 'text-[#626B76] group-hover:text-[#9AA3AD]'
+                          isActive
+                            ? "text-[#4A9EFF]"
+                            : "text-[#626B76] group-hover:text-[#9AA3AD]"
                         }`}
                       />
                       <span className="truncate">{item.label}</span>
@@ -161,11 +179,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {item.badge && (
                       <span
                         className={`mono text-[10px] px-1.5 py-0.2 rounded font-medium border ${
-                          item.badgeType === 'live'
-                            ? 'bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30'
-                            : item.badgeType === 'block'
-                            ? 'bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30'
-                            : 'bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30'
+                          item.badgeType === "live"
+                            ? "bg-[#2ED47A]/15 text-[#2ED47A] border-[#2ED47A]/30"
+                            : item.badgeType === "block"
+                              ? "bg-[#FF4D4F]/15 text-[#FF4D4F] border-[#FF4D4F]/30"
+                              : "bg-[#F5A524]/15 text-[#F5A524] border-[#F5A524]/30"
                         }`}
                       >
                         {item.badge}
@@ -188,13 +206,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer Info */}
       <div className="p-3 border-t border-[#1E232A] bg-[#0A0C0E] space-y-2">
         <div className="flex items-center justify-between text-[11px] mono">
-          <span className="text-[#626B76]">Zero-Trust Perimeter</span>
-          <span className="text-[#2ED47A] flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> 100%
-          </span>
+          <span className="text-[#626B76]">Simulated authorization</span>
+          <span className="text-[#F5A524] flex items-center gap-1">MOCK</span>
         </div>
         <div className="text-[10px] text-[#3F464E] leading-relaxed">
-          Model can request. Sentinel decides. Zero secrets exposed.
+          We don&apos;t need perfect AI. We prevent unlimited authority.
         </div>
       </div>
     </aside>

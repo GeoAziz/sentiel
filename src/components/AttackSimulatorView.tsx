@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { AttackScenario, SecurityEvent } from '../types/sentinel';
-import { 
-  Radio, 
-  Play, 
-  CheckCircle2, 
-  XCircle, 
-  ShieldAlert, 
-  Terminal, 
-  ArrowRight, 
-  Sparkles, 
+import React, { useState } from "react";
+import { AttackScenario, SecurityEvent } from "../types/sentinel";
+import {
+  Radio,
+  Play,
+  CheckCircle2,
+  XCircle,
+  ShieldAlert,
+  Terminal,
+  ArrowRight,
+  Sparkles,
   RotateCcw,
   Zap,
-  Check
-} from 'lucide-react';
+  Check,
+} from "lucide-react";
 
 interface AttackSimulatorViewProps {
   scenarios: AttackScenario[];
-  onExecuteScenario: (scenario: AttackScenario) => Promise<void>;
+  onExecuteScenario: (scenario: AttackScenario) => Promise<SecurityEvent>;
   isExecuting: boolean;
 }
 
@@ -25,14 +25,19 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
   onExecuteScenario,
   isExecuting,
 }) => {
-  const [activeScenarioId, setActiveScenarioId] = useState<string>(scenarios[0]?.id || '');
-  const [testResults, setTestResults] = useState<Record<string, 'PASS' | 'RUNNING'>>({});
+  const [activeScenarioId, setActiveScenarioId] = useState<string>(
+    scenarios[0]?.id || "",
+  );
+  const [testResults, setTestResults] = useState<
+    Record<string, "PASS" | "FAIL" | "RUNNING">
+  >({});
   const [activeStepIndex, setActiveStepIndex] = useState<number>(-1);
 
-  const activeScenario = scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
+  const activeScenario =
+    scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
 
   const handleRunSingle = async (scenario: AttackScenario) => {
-    setTestResults((prev) => ({ ...prev, [scenario.id]: 'RUNNING' }));
+    setTestResults((prev) => ({ ...prev, [scenario.id]: "RUNNING" }));
     setActiveStepIndex(0);
 
     // Step-by-step animation
@@ -41,8 +46,16 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
       await new Promise((r) => setTimeout(r, 260));
     }
 
-    await onExecuteScenario(scenario);
-    setTestResults((prev) => ({ ...prev, [scenario.id]: 'PASS' }));
+    try {
+      const event = await onExecuteScenario(scenario);
+      const defended = event.decision === "BLOCK" || event.status === "PENDING";
+      setTestResults((prev) => ({
+        ...prev,
+        [scenario.id]: defended ? "PASS" : "FAIL",
+      }));
+    } catch {
+      setTestResults((prev) => ({ ...prev, [scenario.id]: "FAIL" }));
+    }
   };
 
   const handleRunAll = async () => {
@@ -52,7 +65,9 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
     }
   };
 
-  const passCount = Object.values(testResults).filter((v) => v === 'PASS').length;
+  const passCount = Object.values(testResults).filter(
+    (v) => v === "PASS",
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -60,17 +75,18 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[#E8EAED] flex items-center gap-2">
-            AI Agent Attack Simulator & Test Lab
+            Mock Attack Scenario Lab
           </h1>
           <p className="text-xs text-[#9AA3AD] mt-1 max-w-2xl">
-            Simulate sophisticated adversarial vectors (indirect prompt injection, secret exfiltration, command escalation) against the live Sentinel policy engine.
+            Send simulated adversarial requests to the mock policy API. No real
+            agent or tool is invoked.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           {passCount > 0 && (
             <div className="mono text-xs text-[#2ED47A] bg-[#2ED47A]/10 border border-[#2ED47A]/25 px-2.5 py-1 rounded">
-              {passCount}/{scenarios.length} Defended (100%)
+              {passCount}/{scenarios.length} mock checks passed
             </div>
           )}
           <button
@@ -106,24 +122,30 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
                   }}
                   className={`p-3.5 rounded-lg border transition-all cursor-pointer select-none ${
                     isSelected
-                      ? 'bg-[#14171B] border-[#4A9EFF]/50 shadow-md'
-                      : 'bg-[#0E1013] border-[#1E232A] hover:border-[#2A3038] hover:bg-[#171B21]'
+                      ? "bg-[#14171B] border-[#4A9EFF]/50 shadow-md"
+                      : "bg-[#0E1013] border-[#1E232A] hover:border-[#2A3038] hover:bg-[#171B21]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="mono text-xs font-bold text-[#E8EAED]">
                       {sc.name}
                     </span>
-                    {result === 'PASS' ? (
+                    {result === "PASS" ? (
                       <span className="mono text-[10px] px-1.5 py-0.2 rounded bg-[#2ED47A]/15 text-[#2ED47A] border border-[#2ED47A]/30 font-bold flex items-center gap-1">
                         <Check className="w-3 h-3" /> PASS
                       </span>
-                    ) : result === 'RUNNING' ? (
+                    ) : result === "FAIL" ? (
+                      <span className="mono text-[10px] px-1.5 py-0.2 rounded bg-[#FF4D4F]/15 text-[#FF4D4F] border border-[#FF4D4F]/30 font-bold">
+                        FAIL
+                      </span>
+                    ) : result === "RUNNING" ? (
                       <span className="mono text-[10px] px-1.5 py-0.2 rounded bg-[#4A9EFF]/15 text-[#4A9EFF] border border-[#4A9EFF]/30 font-bold animate-pulse">
                         TESTING...
                       </span>
                     ) : (
-                      <span className="mono text-[10px] text-[#626B76]">READY</span>
+                      <span className="mono text-[10px] text-[#626B76]">
+                        READY
+                      </span>
                     )}
                   </div>
                   <div className="text-[11px] text-[#9AA3AD] mt-1 line-clamp-1">
@@ -154,7 +176,7 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
 
               <button
                 onClick={() => handleRunSingle(activeScenario)}
-                disabled={testResults[activeScenario.id] === 'RUNNING'}
+                disabled={testResults[activeScenario.id] === "RUNNING"}
                 className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-[#FF4D4F] hover:bg-[#ff686a] text-white text-xs font-semibold cursor-pointer transition-colors self-start sm:self-auto disabled:opacity-50"
               >
                 <Play className="w-3.5 h-3.5" />
@@ -170,15 +192,20 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
             {/* Attack Anatomy */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#14171B] border border-[#1E232A] rounded-md text-xs mono">
               <div>
-                <span className="text-[10px] text-[#626B76] uppercase block">Attacker Payload</span>
+                <span className="text-[10px] text-[#626B76] uppercase block">
+                  Attacker Payload
+                </span>
                 <span className="text-[#FF4D4F] font-semibold break-all">
                   {activeScenario.promptSnippet}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] text-[#626B76] uppercase block">Target Tool Call</span>
+                <span className="text-[10px] text-[#626B76] uppercase block">
+                  Target Tool Call
+                </span>
                 <span className="text-[#4A9EFF] font-semibold break-all">
-                  {activeScenario.capability}(&ldquo;{activeScenario.resource}&rdquo;)
+                  {activeScenario.capability}(&ldquo;{activeScenario.resource}
+                  &rdquo;)
                 </span>
               </div>
             </div>
@@ -191,7 +218,9 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
 
               <div className="space-y-2 bg-[#08090B] border border-[#1E232A] rounded-lg p-4">
                 {activeScenario.steps.map((step, idx) => {
-                  const isDone = activeStepIndex >= idx || testResults[activeScenario.id] === 'PASS';
+                  const isDone =
+                    activeStepIndex >= idx ||
+                    testResults[activeScenario.id] === "PASS";
                   const isCurrent = activeStepIndex === idx;
 
                   return (
@@ -199,10 +228,10 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
                       key={idx}
                       className={`flex items-center gap-3 text-xs mono transition-all ${
                         isDone
-                          ? 'text-[#2ED47A]'
+                          ? "text-[#2ED47A]"
                           : isCurrent
-                          ? 'text-[#4A9EFF] font-semibold'
-                          : 'text-[#3F464E]'
+                            ? "text-[#4A9EFF] font-semibold"
+                            : "text-[#3F464E]"
                       }`}
                     >
                       <span className="w-4 h-4 flex items-center justify-center shrink-0">
@@ -222,21 +251,22 @@ export const AttackSimulatorView: React.FC<AttackSimulatorViewProps> = ({
             </div>
 
             {/* Result Outcome Badge */}
-            {testResults[activeScenario.id] === 'PASS' && (
+            {testResults[activeScenario.id] === "PASS" && (
               <div className="p-3.5 rounded-lg bg-[#2ED47A]/10 border border-[#2ED47A]/30 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="w-5 h-5 text-[#2ED47A]" />
                   <div>
                     <div className="mono text-xs font-bold text-[#2ED47A]">
-                      ATTACK PREVENTED — PASS
+                      MOCK POLICY RESULT — PASS
                     </div>
                     <div className="text-[11px] text-[#9AA3AD]">
-                      Sentinel zero-trust boundary neutralized threat. 0 data disclosed.
+                      The API blocked or held the request for review. No
+                      external action ran.
                     </div>
                   </div>
                 </div>
                 <div className="mono text-xs text-[#2ED47A] font-semibold">
-                  100% DEFENSE
+                  MOCK CHECK
                 </div>
               </div>
             )}
