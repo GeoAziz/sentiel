@@ -1,0 +1,6 @@
+{
+  "name": "Sentinel — AI Agent Runtime Security & Authorization",
+  "description": "Zero-trust runtime authorization firewall, policy enforcement boundary, and security governance platform for autonomous AI agents.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

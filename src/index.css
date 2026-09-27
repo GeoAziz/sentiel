@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #08090B;
+    --bg-surface: #0E1013;
+    --bg-raised: #14171B;
+    --bg-overlay: #1A1E24;
+    --bg-hover: #171B21;
+
+    --border-subtle: #1E232A;
+    --border-strong: #2A3038;
+    --border-bright: #363D47;
+
+    --text-primary: #E8EAED;
+    --text-secondary: #9AA3AD;
+    --text-muted: #626B76;
+    --text-faint: #3F464E;
+
+    --allow: #2ED47A;
+    --allow-bg: rgba(46, 212, 122, 0.10);
+    --allow-br: rgba(46, 212, 122, 0.28);
+
+    --review: #F5A524;
+    --review-bg: rgba(245, 165, 36, 0.10);
+    --review-br: rgba(245, 165, 36, 0.28);
+
+    --block: #FF4D4F;
+    --block-bg: rgba(255, 77, 79, 0.10);
+    --block-br: rgba(255, 77, 79, 0.32);
+
+    --accent: #4A9EFF;
+    --accent-bg: rgba(74, 158, 255, 0.10);
+    --accent-br: rgba(74, 158, 255, 0.30);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(46,212,122,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(46,212,122,0); }
+  100% { box-shadow: 0 0 0 0 rgba(46,212,122,0); }
+}
+
+@keyframes pulse-block {
+  0% { box-shadow: 0 0 0 0 rgba(255,77,79,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255,77,79,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,77,79,0); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+}
+
+@keyframes float-delay {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-1deg); }
+}
+
+@keyframes orbit-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-ccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-pulse-green {
+  animation: pulse-green 2.4s ease-out infinite;
+}
+
+.animate-pulse-block {
+  animation: pulse-block 1.6s ease-out infinite;
+}
+
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-delay 7s ease-in-out 1s infinite;
+}
+
+.animate-orbit-slow {
+  animation: orbit-cw 40s linear infinite;
+}
+
+.animate-orbit-counter {
+  animation: orbit-ccw 40s linear infinite;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
