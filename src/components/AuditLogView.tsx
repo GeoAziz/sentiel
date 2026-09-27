@@ -66,10 +66,10 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[#E8EAED] flex items-center gap-2">
-            Immutable Audit Trail &amp; SIEM Compliance
+            Mock Decision Log
           </h1>
           <p className="text-xs text-[#9AA3AD] mt-1 max-w-2xl">
-            Cryptographically chained records of every runtime decision. Designed for SOC 2 Type II, ISO 27001, and EU AI Act article compliance.
+            In-memory demo records from the mock API. Data is lost when the server restarts; hashes are illustrative and provide no tamper resistance or compliance evidence.
           </p>
         </div>
 
@@ -91,27 +91,27 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ events, onSelectEven
         </div>
       </div>
 
-      {/* Compliance Certification Status Pill */}
+      {/* Mock storage status */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-[#0E1013] border border-[#1E232A] rounded-lg text-xs mono">
         <div className="flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-[#2ED47A] shrink-0" />
           <div>
-            <div className="text-[#E8EAED] font-semibold">Ledger Chaining: VERIFIED</div>
-            <div className="text-[10px] text-[#626B76]">SHA-256 Merkle root valid</div>
+            <div className="text-[#E8EAED] font-semibold">Store: IN-MEMORY</div>
+            <div className="text-[10px] text-[#626B76]">Cleared on server restart</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-[#4A9EFF] shrink-0" />
           <div>
-            <div className="text-[#E8EAED] font-semibold">EU AI Act Conformity</div>
-            <div className="text-[10px] text-[#626B76]">Human oversight logging (Art. 14)</div>
+            <div className="text-[#E8EAED] font-semibold">Approval flow: SIMULATED</div>
+            <div className="text-[10px] text-[#626B76]">Demo operator identity only</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Hash className="w-4 h-4 text-[#F5A524] shrink-0" />
           <div>
-            <div className="text-[#E8EAED] font-semibold">SOC 2 CC6.1 Control</div>
-            <div className="text-[10px] text-[#626B76]">Logical access boundaries enforced</div>
+            <div className="text-[#E8EAED] font-semibold">Compliance: NOT ASSESSED</div>
+            <div className="text-[10px] text-[#626B76]">Not production security evidence</div>
           </div>
         </div>
       </div>

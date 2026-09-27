@@ -4,6 +4,18 @@ export type TrustLevel = 'TRUSTED' | 'UNTRUSTED';
 export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type AgentStatus = 'ACTIVE' | 'IDLE' | 'SUSPENDED' | 'QUARANTINED';
 
+export interface AuthorizationRequest {
+  agent_id: string;
+  capability: string;
+  resource: string;
+  action?: string;
+  context?: {
+    source?: string;
+    trust?: TrustLevel;
+    promptSnippet?: string;
+  };
+}
+
 export interface AgentCapability {
   label: string;
   state: 'yes' | 'no' | 'warn';

@@ -8,7 +8,7 @@ interface SettingsViewProps {
 export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) => {
   const [strictMode, setStrictMode] = useState(true);
   const [autoQuarantine, setAutoQuarantine] = useState(true);
-  const [geminiInspection, setGeminiInspection] = useState(true);
+  const [mockAdvisory, setMockAdvisory] = useState(true);
   const [multiFactorGating, setMultiFactorGating] = useState(true);
   const [webhookUrl, setWebhookUrl] = useState('https://hooks.slack.com/services/T00/B00/sentinel-alerts');
   const [savedNotification, setSavedNotification] = useState(false);
@@ -24,10 +24,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold tracking-tight text-[#E8EAED] flex items-center gap-2">
-          Security Gateway Settings
+          Mock Runtime Settings
         </h1>
         <p className="text-xs text-[#9AA3AD] mt-1">
-          Configure runtime authorization thresholds, SIEM integrations, and Gemini 3.8 Flash threat inspection parameters.
+          Preview-only controls for the demo. Agent and policy changes are managed by the mock API; these settings do not change real systems or send webhooks.
         </p>
       </div>
 
@@ -42,9 +42,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Strict Zero-Trust Perimeter (Default Deny)</div>
+                <div className="font-semibold text-[#E8EAED]">Default-Deny Preview</div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Block any capability or tool call not explicitly whitelisted in the active agent policy.
+                  Display-only toggle. The mock API always evaluates its active agent policy.
                 </div>
               </div>
               <button
@@ -56,15 +56,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
                     : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
                 }`}
               >
-                {strictMode ? 'ENFORCING' : 'PERMISSIVE'}
+                {strictMode ? 'PREVIEW ON' : 'PREVIEW OFF'}
               </button>
             </div>
 
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Untrusted Provenance Taint Quarantine</div>
+                <div className="font-semibold text-[#E8EAED]">Provenance Quarantine Preview</div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Automatically isolate agent sessions if instructions originate from unverified third-party content.
+                  Display-only toggle; request provenance is evaluated by the mock policy API.
                 </div>
               </div>
               <button
@@ -82,21 +82,21 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
 
             <div className="flex items-center justify-between p-3 bg-[#14171B] rounded-md border border-[#1E232A]">
               <div>
-                <div className="font-semibold text-[#E8EAED]">Gemini 3.8 Flash Deep Threat Inspection</div>
+                <div className="font-semibold text-[#E8EAED]">Deterministic Mock Advisory</div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Analyze runtime tool invocation semantics with LLM reasoning to catch subtle prompt injection.
+                  Local heuristic text only. No external model is called, and this advisory never decides authorization.
                 </div>
               </div>
               <button
                 type="button"
-                onClick={() => setGeminiInspection(!geminiInspection)}
+                onClick={() => setMockAdvisory(!mockAdvisory)}
                 className={`mono text-[10px] px-3 py-1 rounded font-bold border transition-colors cursor-pointer ${
-                  geminiInspection
+                  mockAdvisory
                     ? 'bg-[#4A9EFF]/15 text-[#4A9EFF] border-[#4A9EFF]/30'
                     : 'bg-[#14171B] text-[#626B76] border-[#2A3038]'
                 }`}
               >
-                {geminiInspection ? 'ENABLED' : 'DISABLED'}
+                {mockAdvisory ? 'PREVIEW ON' : 'PREVIEW OFF'}
               </button>
             </div>
 
@@ -104,7 +104,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
               <div>
                 <div className="font-semibold text-[#E8EAED]">Dual-Key Human-in-the-Loop Gating</div>
                 <div className="text-[11px] text-[#626B76] mt-0.5">
-                  Require operator cryptographic approval on production rollouts and database schema modifications.
+                  The approval endpoint records a demo operator decision; no cryptographic identity check is performed.
                 </div>
               </div>
               <button
@@ -131,7 +131,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
 
           <div>
             <label className="text-[10px] uppercase font-semibold text-[#626B76] block mb-1">
-              Real-Time Security Webhook URL
+              Demo Webhook URL (not sent)
             </label>
             <input
               type="text"
@@ -140,7 +140,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onResetDemoData }) =
               className="w-full bg-[#14171B] border border-[#2A3038] rounded-md p-2 text-xs mono text-[#E8EAED] focus:outline-none focus:border-[#4A9EFF]"
             />
             <div className="text-[11px] text-[#626B76] mt-1">
-              Receives instant JSON payloads whenever Sentinel records a BLOCK or REVIEW event.
+              Preview only. This app does not send webhook requests.
             </div>
           </div>
         </div>

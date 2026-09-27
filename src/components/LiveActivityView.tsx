@@ -6,6 +6,7 @@ import { formatTime } from '../utils/engine';
 interface LiveActivityViewProps {
   events: SecurityEvent[];
   isLive: boolean;
+  streamConnected: boolean;
   onToggleLive: () => void;
   onSelectEvent: (id: string) => void;
   onClearStream?: () => void;
@@ -14,6 +15,7 @@ interface LiveActivityViewProps {
 export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
   events,
   isLive,
+  streamConnected,
   onToggleLive,
   onSelectEvent,
   onClearStream,
@@ -41,10 +43,10 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-[#E8EAED] flex items-center gap-2">
-            Live Interception Stream
+            Mock Authorization Event Stream
           </h1>
           <p className="text-xs text-[#9AA3AD] mt-0.5">
-            Real-time feed of every tool invocation trapped at the Sentinel execution perimeter.
+            API-backed decisions from this demo process. No real agent tools are run.
           </p>
         </div>
 
@@ -110,8 +112,9 @@ export const LiveActivityView: React.FC<LiveActivityViewProps> = ({
       <div className="bg-[#0E1013] border border-[#1E232A] rounded-lg overflow-hidden">
         <div className="p-3 px-4 border-b border-[#1E232A] flex items-center justify-between text-xs mono text-[#626B76] bg-[#0A0C0E]">
           <span>STREAM BUFFER ({filteredEvents.length} events)</span>
-          <span className="flex items-center gap-1 text-[#2ED47A]">
-            <Radio className="w-3 h-3 animate-pulse" /> Interceptor Online · &lt;2ms Latency
+          <span className={`flex items-center gap-1 ${streamConnected ? 'text-[#2ED47A]' : 'text-[#F5A524]'}`}>
+            <Radio className={`w-3 h-3 ${streamConnected ? 'animate-pulse' : ''}`} />
+            {streamConnected ? 'Mock API connected' : isLive ? 'Connecting to mock API' : 'Stream paused'}
           </span>
         </div>
 

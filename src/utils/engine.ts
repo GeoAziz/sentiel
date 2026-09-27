@@ -1,4 +1,4 @@
-import { Agent, Policy, Decision, AISecurityAnalysis, SecurityEvent, TrustLevel, EventStatus } from '../types/sentinel';
+import { Agent, Policy, Decision, SecurityEvent, TrustLevel, EventStatus } from '../types/sentinel';
 
 // Pattern matcher supporting standard glob wildcards (e.g. src/**, .env*, rm -rf*)
 export function matchPattern(pattern: string, target: string): boolean {
@@ -65,7 +65,7 @@ export function evaluateRequest(
   );
 
   // 2. Iterate through policy rules for matching
-  let matchedRule: { res: string; dec: Decision; explanation?: string } | null = null;
+  let matchedRule: { res: string; dec: Decision; explanation?: string; requireTrustedOrigin?: boolean } | null = null;
 
   for (const group of policy.groups) {
     for (const rule of group.rules) {
@@ -92,7 +92,23 @@ export function evaluateRequest(
         { label: 'Sentinel intercepted request at runtime boundary', state: 'done' },
         { label: 'Taint tracking flagged UNTRUSTED origin', state: 'done', tone: 'block' },
         { label: 'Policy evaluated: Zero-Trust Taint Quarantine -> BLOCK', state: 'done', tone: 'block' },
-        { label: 'Action blocked. Zero bytes leaked.', state: 'done', tone: 'allow' },
+        { label: 'Mock action blocked; no real tool was invoked.', state: 'done', tone: 'block' },
+      ],
+    };
+  }
+
+  if (matchedRule?.requireTrustedOrigin && sourceTrust !== 'TRUSTED') {
+    return {
+      decision: 'BLOCK',
+      status: 'PREVENTED',
+      policyId: policy.id,
+      policyName: policy.name,
+      reason: matchedRule.explanation || `Rule "${matchedRule.res}" requires trusted provenance.`,
+      timeline: [
+        { label: `Agent requested ${capability}("${resource}")`, state: 'done' },
+        { label: 'Sentinel checked request provenance', state: 'done' },
+        { label: `Policy evaluated: ${matchedRule.res} requires trusted origin -> BLOCK`, state: 'done', tone: 'block' },
+        { label: 'Mock tool adapter not invoked', state: 'done', tone: 'block' },
       ],
     };
   }
@@ -141,7 +157,7 @@ export function evaluateRequest(
         { label: `Agent requested ${capability}("${resource}")`, state: 'done' },
         { label: 'Sentinel verified identity & role boundary', state: 'done' },
         { label: `Policy evaluated: ${matchedRule.res} -> ALLOW`, state: 'done', tone: 'allow' },
-        { label: 'Tool call permitted and executed safely', state: 'done', tone: 'allow' },
+        { label: 'Mock adapter may proceed; no real tool is executed.', state: 'done', tone: 'allow' },
       ],
     };
   }
@@ -157,66 +173,12 @@ export function evaluateRequest(
       { label: `Agent requested ${capability}("${resource}")`, state: 'done' },
       { label: 'Sentinel checked declared tool matrix', state: 'done' },
       { label: 'Resource not in whitelist -> Default Deny', state: 'done', tone: 'block' },
-      { label: 'Execution halted at runtime boundary', state: 'done', tone: 'block' },
+      { label: 'Mock adapter withheld by default-deny policy', state: 'done', tone: 'block' },
     ],
   };
 }
 
-// Calls Gemini AI threat analysis backend endpoint
-export async function analyzeWithAI(
-  agent: Agent,
-  capability: string,
-  resource: string,
-  action: string,
-  source: { origin: string; trust: TrustLevel },
-  policyRule: { name: string; reason: string }
-): Promise<AISecurityAnalysis> {
-  try {
-    const res = await fetch('/api/security/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        agent,
-        capability,
-        resource,
-        action,
-        source,
-        policyRule,
-      }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.analysis) {
-        return {
-          ...data.analysis,
-          engine: data.engine || 'gemini-3.8-flash',
-        };
-      }
-    }
-  } catch (err) {
-    console.warn('Backend security analysis call failed, using client fallback', err);
-  }
-
-  // Fallback heuristic analysis if server is unreachable
-  const isUntrusted = source.trust === 'UNTRUSTED';
-  const isSecret = resource.includes('.env') || resource.includes('secret') || resource.includes('ssh');
-
-  return {
-    intent: isSecret ? 'Access private configuration credentials' : 'Execute operational tool action',
-    threat: isUntrusted && isSecret ? 'Indirect Prompt Injection' : isSecret ? 'Unauthorized Secret Access' : 'Normal Authorized Operation',
-    risk: isUntrusted && isSecret ? 'HIGH' : isSecret ? 'HIGH' : 'LOW',
-    confidence: 94,
-    recommendation: isSecret ? 'BLOCK' : 'ALLOW',
-    mitreAtlasId: isUntrusted && isSecret ? 'AML.T0051' : 'AML.M0000',
-    reasoning: isUntrusted && isSecret
-      ? 'Untrusted source attempting to probe environment secrets. Verified injection signature.'
-      : 'Evaluated against policy constraints.',
-    engine: 'sentinel-local-heuristics',
-  };
-}
-
-// Generate deterministic mock SHA-256 hash for event chaining
+// Generates an illustrative, non-cryptographic event fingerprint for the demo UI.
 export function generateHash(prevHash: string, eventId: string, timestamp: string): string {
   const str = `${prevHash}_${eventId}_${timestamp}`;
   let hash = 0;
@@ -226,7 +188,7 @@ export function generateHash(prevHash: string, eventId: string, timestamp: strin
     hash |= 0;
   }
   const hex = Math.abs(hash).toString(16).padStart(8, '0');
-  return `${hex}e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5`.slice(0, 64);
+  return `mock-${hex}`;
 }
 
 export function formatTime(iso: string): string {
